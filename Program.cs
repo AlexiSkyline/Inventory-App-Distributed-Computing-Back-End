@@ -1,4 +1,11 @@
+using Microsoft.EntityFrameworkCore;
+using Unach.Inventory.API.Helpers;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// * Assign the database connection string
+ContextDB.ConnectionString = builder.Configuration.GetConnectionString( "DBConexion" );
+builder.Services.AddDbContext<InventoryAPIContext>(( option ) => option.UseSqlServer( ContextDB.ConnectionString ));
 
 // Add services to the container.
 
