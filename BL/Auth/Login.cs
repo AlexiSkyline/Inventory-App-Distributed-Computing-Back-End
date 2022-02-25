@@ -1,11 +1,13 @@
 using System.Data;
 using Microsoft.Data.SqlClient;
 using Unach.Inventory.API.Helpers;
+using Unach.Inventory.API.Model.Request;
+using Unach.Inventory.API.Model.Response;
 
 namespace Unach.Inventory.API.BL.Auth {
     public class Login {
-        public async Task<Model.Response.LoginResponse> LoginPortal( Model.Request.LoginModel loginModel ) {
-            Model.Response.LoginResponse results = new Model.Response.LoginResponse();
+        public async Task<LoginResponse> Loginseller( LoginModel loginModel ) {
+            LoginResponse results = new LoginResponse();
 
             if( loginModel.UserName != null && loginModel.Password != null ) {
                 using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
@@ -22,15 +24,15 @@ namespace Unach.Inventory.API.BL.Auth {
 
                     SqlParameter successStatus  = new SqlParameter();
                     successStatus.ParameterName = "@Exito";
-                    successStatus.SqlDbType     = System.Data.SqlDbType.Bit;
-                    successStatus.Direction     = System.Data.ParameterDirection.Output;
+                    successStatus.SqlDbType     = SqlDbType.Bit;
+                    successStatus.Direction     = ParameterDirection.Output;
 
                     commandStoredProcedure.Parameters.Add( successStatus );
 
                     SqlParameter message  = new SqlParameter();
                     message.ParameterName = "@Mensaje";
-                    message.SqlDbType     = System.Data.SqlDbType.VarChar;
-                    message.Direction     = System.Data.ParameterDirection.Output;
+                    message.SqlDbType     = SqlDbType.VarChar;
+                    message.Direction     = ParameterDirection.Output;
                     message.Size          = 4000;
 
                     commandStoredProcedure.Parameters.Add( message );
@@ -47,12 +49,12 @@ namespace Unach.Inventory.API.BL.Auth {
                     } 
 
                     connection.Close();
-                    results.Status = ( bool ) successStatus.Value;
-                    results.Message       = ( string ) message.Value;
+                    results.Status  = ( bool ) successStatus.Value;
+                    results.Message = ( string ) message.Value;
                 }
             } else {
-                results.Status        = false;
-                results.Message       = "The User Name and PassWord cannot be Empty";
+                results.Status  = false;
+                results.Message = "The User Name and PassWord cannot be Empty";
             }
 
             return results;
