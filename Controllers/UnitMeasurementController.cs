@@ -35,5 +35,17 @@ public class UnitMeasurementController : ControllerBase {
 
             return Ok( request );
         }
+
+        [HttpPut( "" )]
+        public async Task<IActionResult> UpdateUnitMeasurement( UnitMeasurementRequest unitMeasurementRequest ) {
+            var request = await BLLUnitMeasurement.UpdateUnitMeasurement( unitMeasurementRequest );
+
+            if( request.Status == false ) {
+                var message = new { request.Message };
+                return Ok( message );
+            }
+
+            return Ok( request );
+        }
     #endregion
 }
