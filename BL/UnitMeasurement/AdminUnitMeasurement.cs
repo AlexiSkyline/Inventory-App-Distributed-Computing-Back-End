@@ -3,6 +3,7 @@ using Microsoft.Data.SqlClient;
 using Unach.Inventory.API.Helpers;
 using Unach.Inventory.API.Model.Request;
 using Unach.Inventory.API.Model.Response;
+using Unach.Inventory.API.Model;
 namespace Unach.Inventory.API.BL.UnitMeasurement;
 
 public class AdminUnitMeasurement {
@@ -57,8 +58,8 @@ public class AdminUnitMeasurement {
         return results;
     }
 
-    public async Task<List<UnitMeasurementResponse>> ReadMeasurementResponse() {
-        List<UnitMeasurementResponse> results = new List<UnitMeasurementResponse>();
+    public async Task<List<Object>> ReadMeasurementResponse() {
+        List<Object> results = new List<Object>();
 
         using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
             connection.Open();
@@ -89,10 +90,12 @@ public class AdminUnitMeasurement {
             var infoUnitMeasurement = await commandStoredProcedure.ExecuteReaderAsync();
 
             while( infoUnitMeasurement.Read() ) {
-                results.Add( new(){
-                    Id          = infoUnitMeasurement.GetInt32( "Id" ),
-                    Description = infoUnitMeasurement.GetString( "Descripcion" )
-                });
+                var formatResponse = new { 
+                    Id = infoUnitMeasurement.GetInt32( "Id" ), 
+                    Description = infoUnitMeasurement.GetString( "Descripcion" ) 
+                };
+
+                results.Add( formatResponse );
             }
 
             connection.Close();
@@ -152,5 +155,58 @@ public class AdminUnitMeasurement {
         }
 
         return results;
+    }
+
+    public async Task<Object> FilterUnitMeasurement( string description ) {
+        List<Object> results = new List<Object>();
+        SingleResponse messageWarning = new SingleResponse();
+        UnitMeasurementRequest unitMeasurement = new UnitMeasurementRequest();
+        unitMeasurement.Description = description;
+
+        
+        using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
+            connection.Open();
+
+            var commandStoredProcedure = new SqlCommand {
+                Connection  = connection,
+                CommandText = "[dbo].[AdministracionUnidadesMedidas]",
+                CommandType = CommandType.StoredProcedure
+            };
+            
+            commandStoredProcedure.Parameters.AddWithValue( "@Descripcion", unitMeasurement.Description );
+            commandStoredProcedure.Parameters.AddWithValue( "@Opcion", "ListaFiltrada" );
+
+            SqlParameter successStatus  = new SqlParameter();
+            successStatus.ParameterName = "@Exito";
+            successStatus.SqlDbType     = SqlDbType.Bit;
+            successStatus.Direction     = ParameterDirection.Output;
+
+            commandStoredProcedure.Parameters.Add( successStatus );
+
+            SqlParameter message  = new SqlParameter();
+            message.ParameterName = "@Mensaje";
+            message.SqlDbType     = SqlDbType.VarChar;
+            message.Direction     = ParameterDirection.Output;
+            message.Size          = 4000;
+
+            commandStoredProcedure.Parameters.Add( message );
+
+            var infoUnitMeasurement = await commandStoredProcedure.ExecuteReaderAsync();
+
+            while( infoUnitMeasurement.Read() ) {
+                var formatResponse = new { 
+                    Id = infoUnitMeasurement.GetInt32( "Id" ), 
+                    Description = infoUnitMeasurement.GetString( "Descripcion" ) 
+                };
+
+                results.Add( formatResponse );
+            }
+
+            connection.Close();
+            messageWarning.Status  = ( bool ) successStatus.Value;
+            messageWarning.Message = ( string ) message.Value; 
+        }
+        
+        return ( results.Capacity != 0 ) ? results : messageWarning;
     }
 }

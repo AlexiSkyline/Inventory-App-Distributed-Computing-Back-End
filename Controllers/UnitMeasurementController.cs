@@ -59,5 +59,12 @@ public class UnitMeasurementController : ControllerBase {
 
             return Ok( request );
         }
+
+        [HttpGet( "{description}" )]
+        public async Task<IActionResult> FilterUnitMeasurement( string description ) {
+            var request = await BLLUnitMeasurement.FilterUnitMeasurement( description );
+
+            return Ok( request );
+        }
     #endregion
 }
