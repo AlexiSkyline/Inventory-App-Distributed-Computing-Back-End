@@ -56,4 +56,48 @@ public class AdminUnitMeasurement {
 
         return results;
     }
+
+    public async Task<List<UnitMeasurementResponse>> ReadMeasurementResponse() {
+            List<UnitMeasurementResponse> results = new List<UnitMeasurementResponse>();
+
+            using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
+                connection.Open();
+
+                var commandStoredProcedure = new SqlCommand {
+                    Connection  = connection,
+                    CommandText = "[dbo].[AdministracionUnidadesMedidas]",
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                commandStoredProcedure.Parameters.AddWithValue( "@Opcion", "Listar" );
+
+                SqlParameter successStatus  = new SqlParameter();
+                successStatus.ParameterName = "@Exito";
+                successStatus.SqlDbType     = SqlDbType.Bit;
+                successStatus.Direction     = ParameterDirection.Output;
+
+                commandStoredProcedure.Parameters.Add( successStatus );
+
+                SqlParameter message  = new SqlParameter();
+                message.ParameterName = "@Mensaje";
+                message.SqlDbType     = SqlDbType.VarChar;
+                message.Direction     = ParameterDirection.Output;
+                message.Size          = 4000;
+
+                commandStoredProcedure.Parameters.Add( message );
+
+                var infoUnitMeasurement = await commandStoredProcedure.ExecuteReaderAsync();
+
+                while( infoUnitMeasurement.Read() ) {
+                    results.Add( new(){
+                        Id          = infoUnitMeasurement.GetInt32( "Id" ),
+                        Description = infoUnitMeasurement.GetString( "Descripcion" )
+                    });
+                }
+
+                connection.Close();
+            }
+
+            return results;
+        }
 }

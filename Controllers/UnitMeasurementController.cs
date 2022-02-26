@@ -23,5 +23,17 @@ public class UnitMeasurementController : ControllerBase {
 
             return Ok( request );
         }
+
+        [HttpGet( "" )]
+        public async Task<IActionResult> ReadUnitMeasurement() {
+            var request = await BLLUnitMeasurement.ReadMeasurementResponse();
+
+            if( request.Count == 0 ) {
+                var message = new { message = "The table is empty" };
+                return Ok( message );
+            }
+
+            return Ok( request );
+        }
     #endregion
 }
