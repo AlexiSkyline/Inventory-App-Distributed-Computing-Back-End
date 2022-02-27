@@ -22,5 +22,11 @@ public class BrandController : ControllerBase {
 
             return Ok( request );
         }
+
+        [HttpGet( "" )]
+        public async Task<IActionResult> GetBrands() {
+            var request = await BLLBrand.ReadBrands();
+            return Ok( request );
+        }
     #endregion
 }
