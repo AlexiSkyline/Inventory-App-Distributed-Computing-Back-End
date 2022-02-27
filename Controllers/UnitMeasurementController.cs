@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Unach.Inventory.API.BL.UnitMeasurement;
+using Unach.Inventory.API.Model;
 using Unach.Inventory.API.Model.Request;
 using Unach.Inventory.API.Model.Response;
 namespace Unach.Inventory.API.Controllers;
@@ -26,13 +27,7 @@ public class UnitMeasurementController : ControllerBase {
 
         [HttpGet( "" )]
         public async Task<IActionResult> ReadUnitMeasurement() {
-            var request = await BLLUnitMeasurement.ReadMeasurementResponse();
-
-            if( request.Count == 0 ) {
-                var message = new { message = "The table is empty" };
-                return Ok( message );
-            }
-
+            var request = await BLLUnitMeasurement.ReadUnitMeasurement();
             return Ok( request );
         }
 
@@ -62,8 +57,7 @@ public class UnitMeasurementController : ControllerBase {
 
         [HttpGet( "{description}" )]
         public async Task<IActionResult> FilterUnitMeasurement( string description ) {
-            var request = await BLLUnitMeasurement.FilterUnitMeasurement( description );
-
+            var request = await BLLUnitMeasurement.FilterUnitMeasurement( description );        
             return Ok( request );
         }
     #endregion

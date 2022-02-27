@@ -58,8 +58,9 @@ public class AdminUnitMeasurement {
         return results;
     }
 
-    public async Task<List<Object>> ReadMeasurementResponse() {
-        List<Object> results = new List<Object>();
+    public async Task<Object> ReadUnitMeasurement() {
+        List<Object> results          = new List<Object>();
+        SingleResponse messageWarning = new SingleResponse();
 
         using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
             connection.Open();
@@ -99,9 +100,22 @@ public class AdminUnitMeasurement {
             }
 
             connection.Close();
+            messageWarning.Status  = ( bool ) successStatus.Value;
+            messageWarning.Message = ( string ) message.Value;
         }
 
-        return results;
+        FormatResult FormatResult = new FormatResult();
+        FormatResult.Results = results;
+
+        if( results.Count == 0 ) {
+            FormatResult.Message = "The table is empty";
+            FormatResult.Status  = false;
+        } else {
+            FormatResult.Message = messageWarning.Message;
+            FormatResult.Status  = messageWarning.Status;
+        }
+
+        return FormatResult;
     }
 
     public async Task<UnitMeasurementResponse> DeleteUnitMeasurement( int IdUnitMeasurement ) {
@@ -158,11 +172,10 @@ public class AdminUnitMeasurement {
     }
 
     public async Task<Object> FilterUnitMeasurement( string description ) {
-        List<Object> results = new List<Object>();
-        SingleResponse messageWarning = new SingleResponse();
+        List<Object> results                   = new List<Object>();
+        SingleResponse messageWarning          = new SingleResponse();
         UnitMeasurementRequest unitMeasurement = new UnitMeasurementRequest();
-        unitMeasurement.Description = description;
-
+        unitMeasurement.Description            = description;
         
         using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
             connection.Open();
@@ -206,7 +219,12 @@ public class AdminUnitMeasurement {
             messageWarning.Status  = ( bool ) successStatus.Value;
             messageWarning.Message = ( string ) message.Value; 
         }
-        
-        return ( results.Capacity != 0 ) ? results : messageWarning;
+
+        FormatResult FormatResult = new FormatResult();
+        FormatResult.Results = results;
+        FormatResult.Message = messageWarning.Message;
+        FormatResult.Status  = messageWarning.Status;
+
+        return ( results.Capacity != 0 ) ? FormatResult : messageWarning;
     }
 }
