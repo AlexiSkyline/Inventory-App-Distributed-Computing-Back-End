@@ -40,5 +40,17 @@ public class BrandController : ControllerBase {
 
             return Ok( request );
         }
+
+        [HttpDelete( "{id}" )]
+        public async Task<ActionResult<BrandRequest>> DeleteBrand( int id ) {
+            var request = await BLLBrand.DeleteBrand( id );
+
+            if( request.Status == false ) {
+                var message = new { request.Message };
+                return Ok( message );
+            }
+
+            return Ok( request );
+        }
     #endregion
 }
