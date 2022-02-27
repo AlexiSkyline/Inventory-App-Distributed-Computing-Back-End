@@ -52,5 +52,11 @@ public class BrandController : ControllerBase {
 
             return Ok( request );
         }
+
+        [HttpGet( "{description}" )]
+        public async Task<IActionResult> FilterBrands( string description ) {
+            var request = await BLLBrand.FilterBrands( description );        
+            return Ok( request );
+        }
     #endregion
 }

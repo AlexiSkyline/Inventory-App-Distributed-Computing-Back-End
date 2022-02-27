@@ -170,4 +170,61 @@ public class AdminBrand {
 
         return results;
     }
+
+    public async Task<Object> FilterBrands( string description ) {
+        List<Object> results          = new List<Object>();
+        SingleResponse messageWarning = new SingleResponse();
+        BrandRequest BrandRequest  = new BrandRequest();
+        BrandRequest.Description   = description;
+        
+        using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
+            connection.Open();
+
+            var commandStoredProcedure = new SqlCommand {
+                Connection  = connection,
+                CommandText = "[dbo].[AdministracionMarcas]",
+                CommandType = CommandType.StoredProcedure
+            };
+            
+            commandStoredProcedure.Parameters.AddWithValue( "@Descripcion", BrandRequest.Description );
+            commandStoredProcedure.Parameters.AddWithValue( "@Opcion", "ListaFiltrada" );
+
+            SqlParameter successStatus  = new SqlParameter();
+            successStatus.ParameterName = "@Exito";
+            successStatus.SqlDbType     = SqlDbType.Bit;
+            successStatus.Direction     = ParameterDirection.Output;
+
+            commandStoredProcedure.Parameters.Add( successStatus );
+
+            SqlParameter message  = new SqlParameter();
+            message.ParameterName = "@Mensaje";
+            message.SqlDbType     = SqlDbType.VarChar;
+            message.Direction     = ParameterDirection.Output;
+            message.Size          = 4000;
+
+            commandStoredProcedure.Parameters.Add( message );
+
+            var infoUnitMeasurement = await commandStoredProcedure.ExecuteReaderAsync();
+
+            while( infoUnitMeasurement.Read() ) {
+                var formatResponse = new { 
+                    Id = infoUnitMeasurement.GetInt32( "Id" ), 
+                    Description = infoUnitMeasurement.GetString( "Descripcion" ) 
+                };
+
+                results.Add( formatResponse );
+            }
+
+            connection.Close();
+            messageWarning.Status  = ( bool ) successStatus.Value;
+            messageWarning.Message = ( string ) message.Value; 
+        }
+
+        FormatResult FormatResult = new FormatResult();
+        FormatResult.Results = results;
+        FormatResult.Message = messageWarning.Message;
+        FormatResult.Status  = messageWarning.Status;
+
+        return ( results.Capacity != 0 ) ? FormatResult : messageWarning;
+    }
 }
