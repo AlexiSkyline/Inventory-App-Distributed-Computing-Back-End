@@ -28,5 +28,17 @@ public class BrandController : ControllerBase {
             var request = await BLLBrand.ReadBrands();
             return Ok( request );
         }
+
+        [HttpPut( "" )]
+        public async Task<IActionResult> UpdateUnitMeasurement( BrandRequest BrandModel ) {
+            var request = await BLLBrand.CreateAndUpdateBrand( BrandModel, "Actualizar" );
+
+            if( request.Status == false ) {
+                var message = new { request.Message };
+                return Ok( message );
+            }
+
+            return Ok( request );
+        }
     #endregion
 }
