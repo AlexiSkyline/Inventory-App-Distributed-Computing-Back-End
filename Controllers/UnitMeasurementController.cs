@@ -14,8 +14,8 @@ public class UnitMeasurementController : ControllerBase {
 
     #region "Methods"
         [HttpPost( "" )]
-        public async Task<IActionResult> CreateUnitMeasurement( UnitMeasurementRequest unitMeasurementRequest ) {
-            var request = await BLLUnitMeasurement.CreateAndUpdateUnitMeasurement( unitMeasurementRequest, "Insertar" );
+        public async Task<IActionResult> CreateUnitMeasurement( DescriptionRequest description ) {
+            var request = await BLLUnitMeasurement.CreateUnitMeasurement( description );
 
             if( request.Status == false ) {
                 var message = new { request.Message };
@@ -33,7 +33,7 @@ public class UnitMeasurementController : ControllerBase {
 
         [HttpPut( "" )]
         public async Task<IActionResult> UpdateUnitMeasurement( UnitMeasurementRequest unitMeasurementRequest ) {
-            var request = await BLLUnitMeasurement.CreateAndUpdateUnitMeasurement( unitMeasurementRequest, "Actualizar" );
+            var request = await BLLUnitMeasurement.UpdateUnitMeasurement( unitMeasurementRequest );
 
             if( request.Status == false ) {
                 var message = new { request.Message };

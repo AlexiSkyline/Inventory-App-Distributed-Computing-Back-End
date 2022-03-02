@@ -7,10 +7,12 @@ using Unach.Inventory.API.Model;
 namespace Unach.Inventory.API.BL.UnitMeasurement;
 
 public class AdminUnitMeasurement {
-    public async Task<UnitMeasurementResponse> CreateAndUpdateUnitMeasurement( UnitMeasurementRequest unitMeasurement, string Opction ) {
+    public async Task<UnitMeasurementResponse> CreateUnitMeasurement( DescriptionRequest descriptionRequest ) {
         UnitMeasurementResponse results = new UnitMeasurementResponse();
+        UnitMeasurementRequest unitMeasurement = new UnitMeasurementRequest();
+        unitMeasurement.Description  = descriptionRequest.Description;
 
-        if( unitMeasurement.Id != null && unitMeasurement.Description != null ) {
+        if( unitMeasurement.Description != null ) {
             using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
                 connection.Open();
 
@@ -22,7 +24,7 @@ public class AdminUnitMeasurement {
 
                 commandStoredProcedure.Parameters.AddWithValue( "@Id", unitMeasurement.Id );
                 commandStoredProcedure.Parameters.AddWithValue( "@Descripcion", unitMeasurement.Description );
-                commandStoredProcedure.Parameters.AddWithValue( "@Opcion", Opction );
+                commandStoredProcedure.Parameters.AddWithValue( "@Opcion", "Insertar" );
 
                 SqlParameter successStatus  = new SqlParameter();
                 successStatus.ParameterName = "@Exito";
@@ -116,6 +118,57 @@ public class AdminUnitMeasurement {
         }
 
         return FormatResult;
+    }
+
+    public async Task<BrandResponse> UpdateUnitMeasurement( UnitMeasurementRequest unitMeasurementRequest ) {
+        BrandResponse results = new BrandResponse();
+
+        if( unitMeasurementRequest.Id != null && unitMeasurementRequest.Description != null ) {
+            using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
+                connection.Open();
+
+                var commandStoredProcedure = new SqlCommand {
+                    Connection  = connection,
+                    CommandText = "[dbo].[AdministracionUnidadesMedidas]",
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                commandStoredProcedure.Parameters.AddWithValue( "@Id", unitMeasurementRequest.Id );
+                commandStoredProcedure.Parameters.AddWithValue( "@Descripcion", unitMeasurementRequest.Description );
+                commandStoredProcedure.Parameters.AddWithValue( "@Opcion", "Actualizar" );
+
+                SqlParameter successStatus  = new SqlParameter();
+                successStatus.ParameterName = "@Exito";
+                successStatus.SqlDbType     = SqlDbType.Bit;
+                successStatus.Direction     = ParameterDirection.Output;
+
+                commandStoredProcedure.Parameters.Add( successStatus );
+
+                SqlParameter message  = new SqlParameter();
+                message.ParameterName = "@Mensaje";
+                message.SqlDbType     = SqlDbType.VarChar;
+                message.Direction     = ParameterDirection.Output;
+                message.Size          = 4000;
+
+                commandStoredProcedure.Parameters.Add( message );
+
+                var infoBrand = await commandStoredProcedure.ExecuteReaderAsync();
+
+                while( infoBrand.Read() ) {
+                    results.Id          = infoBrand.GetGuid( "Id" );
+                    results.Description = infoBrand.GetString( "Descripcion" );
+                }
+
+                connection.Close();
+                results.Status  = ( bool ) successStatus.Value;
+                results.Message = ( string ) message.Value; 
+            }
+        } else {
+            results.Status  = false;
+            results.Message = "The ID and Description cannot be Empty";
+        }
+
+        return results;
     }
 
     public async Task<UnitMeasurementResponse> DeleteUnitMeasurement( string IdUnitMeasurement ) {
