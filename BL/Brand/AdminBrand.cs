@@ -42,7 +42,7 @@ public class AdminBrand {
                 var infoBrand = await commandStoredProcedure.ExecuteReaderAsync();
 
                 while( infoBrand.Read() ) {
-                    results.Id          = infoBrand.GetInt32( "Id" );
+                    results.Id          = infoBrand.GetGuid( "Id" );
                     results.Description = infoBrand.GetString( "Descripcion" );
                 }
 
@@ -118,7 +118,7 @@ public class AdminBrand {
         return FormatResult;
     }
 
-    public async Task<BrandResponse> DeleteBrand( int IdBrand ) {
+    public async Task<BrandResponse> DeleteBrand( Guid IdBrand ) {
         BrandResponse results     = new BrandResponse();
         BrandRequest BrandRequest = new BrandRequest();
         BrandRequest.Id           = IdBrand;
@@ -155,7 +155,7 @@ public class AdminBrand {
                 var infoUnitMeasurement = await commandStoredProcedure.ExecuteReaderAsync();
 
                 while( infoUnitMeasurement.Read() ) {
-                    results.Id          = infoUnitMeasurement.GetInt32( "Id" );
+                    results.Id          = infoUnitMeasurement.GetGuid( "Id" );
                     results.Description = infoUnitMeasurement.GetString( "Descripcion" );
                 }
 
@@ -174,8 +174,8 @@ public class AdminBrand {
     public async Task<Object> FilterBrands( string description ) {
         List<Object> results          = new List<Object>();
         SingleResponse messageWarning = new SingleResponse();
-        BrandRequest BrandRequest  = new BrandRequest();
-        BrandRequest.Description   = description;
+        BrandRequest BrandRequest     = new BrandRequest();
+        BrandRequest.Description      = description;
         
         using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
             connection.Open();

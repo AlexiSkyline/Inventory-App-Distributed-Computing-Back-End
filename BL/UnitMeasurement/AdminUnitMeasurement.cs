@@ -42,7 +42,7 @@ public class AdminUnitMeasurement {
                 var infoUnitMeasurement = await commandStoredProcedure.ExecuteReaderAsync();
 
                 while( infoUnitMeasurement.Read() ) {
-                    results.Id          = infoUnitMeasurement.GetInt32( "Id" );
+                    results.Id          = infoUnitMeasurement.GetGuid( "Id" );
                     results.Description = infoUnitMeasurement.GetString( "Descripcion" );
                 }
 
@@ -118,7 +118,7 @@ public class AdminUnitMeasurement {
         return FormatResult;
     }
 
-    public async Task<UnitMeasurementResponse> DeleteUnitMeasurement( int IdUnitMeasurement ) {
+    public async Task<UnitMeasurementResponse> DeleteUnitMeasurement( Guid IdUnitMeasurement ) {
         UnitMeasurementResponse results = new UnitMeasurementResponse();
         UnitMeasurementRequest unitMeasurement = new UnitMeasurementRequest();
         unitMeasurement.Id = IdUnitMeasurement;
@@ -155,7 +155,7 @@ public class AdminUnitMeasurement {
                 var infoUnitMeasurement = await commandStoredProcedure.ExecuteReaderAsync();
 
                 while( infoUnitMeasurement.Read() ) {
-                    results.Id          = infoUnitMeasurement.GetInt32( "Id" );
+                    results.Id          = infoUnitMeasurement.GetGuid( "Id" );
                     results.Description = infoUnitMeasurement.GetString( "Descripcion" );
                 }
 
