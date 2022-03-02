@@ -12,8 +12,8 @@ public class BrandController : ControllerBase {
 
     #region  "Methods"
         [HttpPost( "" )]
-        public async Task<IActionResult> CreateBrand( BrandRequest BrandModel ) {
-            var request = await BLLBrand.CreateAndUpdateBrand( BrandModel, "Insertar" );
+        public async Task<IActionResult> CreateBrand( DescriptionRequest description ) {
+            var request = await BLLBrand.CreateBrand( description );
 
             if( request.Status == false ) {
                 var message = new { request.Message };
@@ -31,7 +31,7 @@ public class BrandController : ControllerBase {
 
         [HttpPut( "" )]
         public async Task<IActionResult> UpdateUnitMeasurement( BrandRequest BrandModel ) {
-            var request = await BLLBrand.CreateAndUpdateBrand( BrandModel, "Actualizar" );
+            var request = await BLLBrand.UpdateBrand( BrandModel );
 
             if( request.Status == false ) {
                 var message = new { request.Message };
@@ -42,7 +42,7 @@ public class BrandController : ControllerBase {
         }
 
         [HttpDelete( "{id}" )]
-        public async Task<ActionResult<BrandRequest>> DeleteBrand( Guid id ) {
+        public async Task<ActionResult<BrandRequest>> DeleteBrand( string id ) {
             var request = await BLLBrand.DeleteBrand( id );
 
             if( request.Status == false ) {

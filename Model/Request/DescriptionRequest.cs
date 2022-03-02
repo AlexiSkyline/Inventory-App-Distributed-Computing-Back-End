@@ -1,6 +1,5 @@
 namespace Unach.Inventory.API.Model.Request;
 
-public class BrandRequest {
-    public string? Id { get; set; }
+public class DescriptionRequest {
     public string? Description { get; set; }
 }

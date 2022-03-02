@@ -44,7 +44,7 @@ public class UnitMeasurementController : ControllerBase {
         }
         
         [HttpDelete( "{id}" )]
-        public async Task<ActionResult<UnitMeasurementRequest>> DeleteUnitMeasurement( Guid id ) {
+        public async Task<ActionResult<UnitMeasurementRequest>> DeleteUnitMeasurement( string id ) {
             var request = await BLLUnitMeasurement.DeleteUnitMeasurement( id );
 
             if( request.Status == false ) {

@@ -92,7 +92,7 @@ public class AdminUnitMeasurement {
 
             while( infoUnitMeasurement.Read() ) {
                 var formatResponse = new { 
-                    Id = infoUnitMeasurement.GetInt32( "Id" ), 
+                    Id = infoUnitMeasurement.GetGuid( "Id" ), 
                     Description = infoUnitMeasurement.GetString( "Descripcion" ) 
                 };
 
@@ -118,7 +118,7 @@ public class AdminUnitMeasurement {
         return FormatResult;
     }
 
-    public async Task<UnitMeasurementResponse> DeleteUnitMeasurement( Guid IdUnitMeasurement ) {
+    public async Task<UnitMeasurementResponse> DeleteUnitMeasurement( string IdUnitMeasurement ) {
         UnitMeasurementResponse results = new UnitMeasurementResponse();
         UnitMeasurementRequest unitMeasurement = new UnitMeasurementRequest();
         unitMeasurement.Id = IdUnitMeasurement;
@@ -208,7 +208,7 @@ public class AdminUnitMeasurement {
 
             while( infoUnitMeasurement.Read() ) {
                 var formatResponse = new { 
-                    Id = infoUnitMeasurement.GetInt32( "Id" ), 
+                    Id = infoUnitMeasurement.GetGuid( "Id" ), 
                     Description = infoUnitMeasurement.GetString( "Descripcion" ) 
                 };
 

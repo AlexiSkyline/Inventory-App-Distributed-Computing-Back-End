@@ -7,10 +7,12 @@ using Unach.Inventory.API.Model;
 namespace Unach.Inventory.API.BL.Brand;
 
 public class AdminBrand {
-    public async Task<BrandResponse> CreateAndUpdateBrand( BrandRequest Brand, string Opction ) {
-        BrandResponse results = new BrandResponse();
+    public async Task<BrandResponse> CreateBrand( DescriptionRequest descriptionRequest ) {
+        BrandResponse results     = new BrandResponse();
+        BrandRequest BrandRequest = new BrandRequest();
+        BrandRequest.Description  = descriptionRequest.Description;
 
-        if( Brand.Id != null && Brand.Description != null ) {
+        if( BrandRequest.Description != null ) {
             using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
                 connection.Open();
 
@@ -20,9 +22,9 @@ public class AdminBrand {
                     CommandType = CommandType.StoredProcedure
                 };
 
-                commandStoredProcedure.Parameters.AddWithValue( "@Id", Brand.Id );
-                commandStoredProcedure.Parameters.AddWithValue( "@Descripcion", Brand.Description );
-                commandStoredProcedure.Parameters.AddWithValue( "@Opcion", Opction );
+                commandStoredProcedure.Parameters.AddWithValue( "@Id", BrandRequest.Id );
+                commandStoredProcedure.Parameters.AddWithValue( "@Descripcion", BrandRequest.Description );
+                commandStoredProcedure.Parameters.AddWithValue( "@Opcion", "Insertar" );
 
                 SqlParameter successStatus  = new SqlParameter();
                 successStatus.ParameterName = "@Exito";
@@ -92,7 +94,7 @@ public class AdminBrand {
 
             while( infoUnitMeasurement.Read() ) {
                 var formatResponse = new { 
-                    Id = infoUnitMeasurement.GetInt32( "Id" ), 
+                    Id = infoUnitMeasurement.GetGuid( "Id" ), 
                     Description = infoUnitMeasurement.GetString( "Descripcion" ) 
                 };
 
@@ -118,7 +120,58 @@ public class AdminBrand {
         return FormatResult;
     }
 
-    public async Task<BrandResponse> DeleteBrand( Guid IdBrand ) {
+    public async Task<BrandResponse> UpdateBrand( BrandRequest BrandRequest ) {
+        BrandResponse results = new BrandResponse();
+
+        if( BrandRequest.Id != null && BrandRequest.Description != null ) {
+            using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
+                connection.Open();
+
+                var commandStoredProcedure = new SqlCommand {
+                    Connection  = connection,
+                    CommandText = "[dbo].[AdministracionMarcas]",
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                commandStoredProcedure.Parameters.AddWithValue( "@Id", BrandRequest.Id );
+                commandStoredProcedure.Parameters.AddWithValue( "@Descripcion", BrandRequest.Description );
+                commandStoredProcedure.Parameters.AddWithValue( "@Opcion", "Actualizar" );
+
+                SqlParameter successStatus  = new SqlParameter();
+                successStatus.ParameterName = "@Exito";
+                successStatus.SqlDbType     = SqlDbType.Bit;
+                successStatus.Direction     = ParameterDirection.Output;
+
+                commandStoredProcedure.Parameters.Add( successStatus );
+
+                SqlParameter message  = new SqlParameter();
+                message.ParameterName = "@Mensaje";
+                message.SqlDbType     = SqlDbType.VarChar;
+                message.Direction     = ParameterDirection.Output;
+                message.Size          = 4000;
+
+                commandStoredProcedure.Parameters.Add( message );
+
+                var infoBrand = await commandStoredProcedure.ExecuteReaderAsync();
+
+                while( infoBrand.Read() ) {
+                    results.Id          = infoBrand.GetGuid( "Id" );
+                    results.Description = infoBrand.GetString( "Descripcion" );
+                }
+
+                connection.Close();
+                results.Status  = ( bool ) successStatus.Value;
+                results.Message = ( string ) message.Value; 
+            }
+        } else {
+            results.Status  = false;
+            results.Message = "The ID and Description cannot be Empty";
+        }
+
+        return results;
+    }
+
+    public async Task<BrandResponse> DeleteBrand( string IdBrand ) {
         BrandResponse results     = new BrandResponse();
         BrandRequest BrandRequest = new BrandRequest();
         BrandRequest.Id           = IdBrand;
@@ -208,7 +261,7 @@ public class AdminBrand {
 
             while( infoUnitMeasurement.Read() ) {
                 var formatResponse = new { 
-                    Id = infoUnitMeasurement.GetInt32( "Id" ), 
+                    Id = infoUnitMeasurement.GetGuid( "Id" ), 
                     Description = infoUnitMeasurement.GetString( "Descripcion" ) 
                 };
 
