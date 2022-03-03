@@ -93,12 +93,12 @@ public class AdminUnitMeasurement {
             var infoUnitMeasurement = await commandStoredProcedure.ExecuteReaderAsync();
 
             while( infoUnitMeasurement.Read() ) {
-                var formatResponse = new { 
+                var FormatResult = new { 
                     Id = infoUnitMeasurement.GetGuid( "Id" ), 
                     Description = infoUnitMeasurement.GetString( "Descripcion" ) 
                 };
 
-                results.Add( formatResponse );
+                results.Add( FormatResult );
             }
 
             connection.Close();
@@ -106,18 +106,18 @@ public class AdminUnitMeasurement {
             messageWarning.Message = ( string ) message.Value;
         }
 
-        FormatResult FormatResult = new FormatResult();
-        FormatResult.Results = results;
+        FormatResponse FormatResponse = new FormatResponse();
+        FormatResponse.Results = results;
 
         if( results.Count == 0 ) {
-            FormatResult.Message = "The table is empty";
-            FormatResult.Status  = false;
+            FormatResponse.Message = "The table is empty";
+            FormatResponse.Status  = false;
         } else {
-            FormatResult.Message = messageWarning.Message;
-            FormatResult.Status  = messageWarning.Status;
+            FormatResponse.Message = messageWarning.Message;
+            FormatResponse.Status  = messageWarning.Status;
         }
 
-        return FormatResult;
+        return FormatResponse;
     }
 
     public async Task<BrandResponse> UpdateUnitMeasurement( UnitMeasurementRequest unitMeasurementRequest ) {
@@ -260,12 +260,12 @@ public class AdminUnitMeasurement {
             var infoUnitMeasurement = await commandStoredProcedure.ExecuteReaderAsync();
 
             while( infoUnitMeasurement.Read() ) {
-                var formatResponse = new { 
+                var FormatResult = new { 
                     Id = infoUnitMeasurement.GetGuid( "Id" ), 
                     Description = infoUnitMeasurement.GetString( "Descripcion" ) 
                 };
 
-                results.Add( formatResponse );
+                results.Add( FormatResult );
             }
 
             connection.Close();
@@ -273,11 +273,11 @@ public class AdminUnitMeasurement {
             messageWarning.Message = ( string ) message.Value; 
         }
 
-        FormatResult FormatResult = new FormatResult();
-        FormatResult.Results = results;
-        FormatResult.Message = messageWarning.Message;
-        FormatResult.Status  = messageWarning.Status;
+        FormatResponse FormatResponse = new FormatResponse();
+        FormatResponse.Results = results;
+        FormatResponse.Message = messageWarning.Message;
+        FormatResponse.Status  = messageWarning.Status;
 
-        return ( results.Capacity != 0 ) ? FormatResult : messageWarning;
+        return ( results.Capacity != 0 ) ? FormatResponse : messageWarning;
     }
 }

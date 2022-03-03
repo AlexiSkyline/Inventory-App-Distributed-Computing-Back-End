@@ -93,12 +93,12 @@ public class AdminBrand {
             var infoUnitMeasurement = await commandStoredProcedure.ExecuteReaderAsync();
 
             while( infoUnitMeasurement.Read() ) {
-                var formatResponse = new { 
+                var FormatResult = new { 
                     Id = infoUnitMeasurement.GetGuid( "Id" ), 
                     Description = infoUnitMeasurement.GetString( "Descripcion" ) 
                 };
 
-                results.Add( formatResponse );
+                results.Add( FormatResult );
             }
 
             connection.Close();
@@ -106,18 +106,18 @@ public class AdminBrand {
             messageWarning.Message = ( string ) message.Value;
         }
 
-        FormatResult FormatResult = new FormatResult();
-        FormatResult.Results = results;
+        FormatResponse formatResponse = new FormatResponse();
+        formatResponse.Results = results;
 
         if( results.Count == 0 ) {
-            FormatResult.Message = "The table is empty";
-            FormatResult.Status  = false;
+            formatResponse.Message = "The table is empty";
+            formatResponse.Status  = false;
         } else {
-            FormatResult.Message = messageWarning.Message;
-            FormatResult.Status  = messageWarning.Status;
+            formatResponse.Message = messageWarning.Message;
+            formatResponse.Status  = messageWarning.Status;
         }
 
-        return FormatResult;
+        return formatResponse;
     }
 
     public async Task<BrandResponse> UpdateBrand( BrandRequest BrandRequest ) {
@@ -260,12 +260,12 @@ public class AdminBrand {
             var infoUnitMeasurement = await commandStoredProcedure.ExecuteReaderAsync();
 
             while( infoUnitMeasurement.Read() ) {
-                var formatResponse = new { 
+                var FormatResult = new { 
                     Id = infoUnitMeasurement.GetGuid( "Id" ), 
                     Description = infoUnitMeasurement.GetString( "Descripcion" ) 
                 };
 
-                results.Add( formatResponse );
+                results.Add( FormatResult );
             }
 
             connection.Close();
@@ -273,11 +273,11 @@ public class AdminBrand {
             messageWarning.Message = ( string ) message.Value; 
         }
 
-        FormatResult FormatResult = new FormatResult();
-        FormatResult.Results = results;
-        FormatResult.Message = messageWarning.Message;
-        FormatResult.Status  = messageWarning.Status;
+        FormatResponse formatResponse = new FormatResponse();
+        formatResponse.Results = results;
+        formatResponse.Message = messageWarning.Message;
+        formatResponse.Status  = messageWarning.Status;
 
-        return ( results.Capacity != 0 ) ? FormatResult : messageWarning;
+        return ( results.Capacity != 0 ) ? formatResponse : messageWarning;
     }
 }
