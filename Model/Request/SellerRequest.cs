@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 namespace Unach.Inventory.API.Model.Request;
 
-public class LoginRequest {
+public class SellerRequest : GeneralInformation {
     [StringLength(20)]
     [Required( ErrorMessage = "The UserName is required." )]     
 	[MinLength( 5, ErrorMessage  = "The Username must have a Minimum of 05 Characters." )]

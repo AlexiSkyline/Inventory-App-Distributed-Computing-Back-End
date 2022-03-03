@@ -1,10 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 namespace Unach.Inventory.API.Model;
 
-interface GeneralInformation {    
+public class GeneralInformation {    
     [StringLength(50)]
     [Required( ErrorMessage = "The Name is required." )]     
-	[MinLength( 10, ErrorMessage = "The Name must have a minimum 10 characters" )]
+	[MinLength( 5, ErrorMessage  = "The Name must have a minimum 05 characters" )]
 	[MaxLength( 50, ErrorMessage = "The Name must have a Maximum 50 characters." )]
 	public string? Name { get; set; }     
 
