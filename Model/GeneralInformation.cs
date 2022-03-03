@@ -4,7 +4,6 @@ namespace Unach.Inventory.API.Model;
 public class GeneralInformation {
 	[Key]
     [StringLength(36)]
-    [Required( ErrorMessage = "The ID is required." )]
     [MinLength( 36, ErrorMessage = "The ID must have a Minimum of 36 characters." )]
 	[MaxLength( 36, ErrorMessage = "The ID must have a Maximum of 36 characters." )]
     public string? Id { get; set; }
@@ -17,7 +16,7 @@ public class GeneralInformation {
 
 	[StringLength(100)]
     [Required( ErrorMessage = "The Last Name is required." )]     
-	[MinLength( 10, ErrorMessage  = "The Last Name must have a minimum of 10 characters." )]
+	[MinLength( 5, ErrorMessage   = "The Last Name must have a minimum of 05 characters." )]
 	[MaxLength( 100, ErrorMessage = "The Last Name must have a Maximum of 100 Characters." )]
 	public string? LastName { get; set; }
 

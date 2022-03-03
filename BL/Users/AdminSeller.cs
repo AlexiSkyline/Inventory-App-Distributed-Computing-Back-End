@@ -2,9 +2,69 @@ using System.Data;
 using Microsoft.Data.SqlClient;
 using Unach.Inventory.API.Helpers;
 using Unach.Inventory.API.Model;
+using Unach.Inventory.API.Model.Request;
+using Unach.Inventory.API.Model.Response;
 namespace Unach.Inventory.API.BL.Users;
-
 public class AdminSeller {
+    public async Task<SellerResponse> CreateSeller( SellerRequest sellerRequest ) {
+        SellerResponse results     = new SellerResponse();
+
+        using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
+            connection.Open();
+
+            var commandStoredProcedure = new SqlCommand {
+                Connection  = connection,
+                CommandText = "[dbo].[AdministracionVendedores]",
+                CommandType = CommandType.StoredProcedure
+            };
+
+            commandStoredProcedure.Parameters.AddWithValue( "@Id", sellerRequest.Id );
+            commandStoredProcedure.Parameters.AddWithValue( "@Nombre", sellerRequest.Name );
+            commandStoredProcedure.Parameters.AddWithValue( "@Apellidos", sellerRequest.LastName );
+            commandStoredProcedure.Parameters.AddWithValue( "@RFC", sellerRequest.RFC );
+            commandStoredProcedure.Parameters.AddWithValue( "@Direccion", sellerRequest.Address );
+            commandStoredProcedure.Parameters.AddWithValue( "@Correo", sellerRequest.Email );
+            commandStoredProcedure.Parameters.AddWithValue( "@Telefono", sellerRequest.PhoneNumber );
+            commandStoredProcedure.Parameters.AddWithValue( "@UserName", sellerRequest.UserName );
+            commandStoredProcedure.Parameters.AddWithValue( "@Password", sellerRequest.Password );
+            commandStoredProcedure.Parameters.AddWithValue( "@Opcion", "Insertar" );
+
+            SqlParameter successStatus  = new SqlParameter();
+            successStatus.ParameterName = "@Exito";
+            successStatus.SqlDbType     = SqlDbType.Bit;
+            successStatus.Direction     = ParameterDirection.Output;
+
+            commandStoredProcedure.Parameters.Add( successStatus );
+
+            SqlParameter message  = new SqlParameter();
+            message.ParameterName = "@Mensaje";
+            message.SqlDbType     = SqlDbType.VarChar;
+            message.Direction     = ParameterDirection.Output;
+            message.Size          = 4000;
+
+            commandStoredProcedure.Parameters.Add( message );
+
+            var infoBrand = await commandStoredProcedure.ExecuteReaderAsync();
+
+            while( infoBrand.Read() ) {
+                results.Id          = infoBrand.GetGuid( "Id" );
+                results.Name        = infoBrand.GetString( "Nombre" );
+                results.LastName    = infoBrand.GetString( "Apellidos" );
+                results.RFC         = infoBrand.GetString( "RFC" );
+                results.Address     = infoBrand.GetString( "Direccion" );
+                results.Email       = infoBrand.GetString( "Correo" );
+                results.PhoneNumber = infoBrand.GetString( "Telefono" );
+                results.UserName    = infoBrand.GetString( "UserName" );
+            }
+
+            connection.Close();
+            results.Status  = ( bool ) successStatus.Value;
+            results.Message = ( string ) message.Value; 
+        }
+
+        return results;
+    }
+
     public async Task<Object> ReadSeller() {
         List<Object> results          = new List<Object>();
         SingleResponse messageWarning = new SingleResponse();

@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Unach.Inventory.API.BL.Users;
+using Unach.Inventory.API.Model.Request;
+using System.ComponentModel.DataAnnotations;
 namespace Unach.Inventory.API.Controllers;
 
 [ApiController]
@@ -10,6 +12,18 @@ public class SellerController :ControllerBase {
     #endregion
 
     #region  "Methods"
+        [HttpPost( "" )]
+        public async Task<IActionResult> CreateSeller( SellerRequest sellerRequest ) {
+            var request = await BLLSeller.CreateSeller( sellerRequest );
+
+            if( request.Status == false ) {
+                var message = new { request.Message };
+                return Ok( message );
+            }
+
+            return Ok( request );
+        }
+
         [HttpGet( "" )]
         public async Task<IActionResult> GetSeller() {
             var request = await BLLSeller.ReadSeller();
