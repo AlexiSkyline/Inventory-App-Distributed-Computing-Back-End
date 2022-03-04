@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Unach.Inventory.API.BL.Users;
 using Unach.Inventory.API.Model.Request;
-using System.ComponentModel.DataAnnotations;
 namespace Unach.Inventory.API.Controllers;
 
 [ApiController]
@@ -27,6 +26,25 @@ public class SellerController :ControllerBase {
         [HttpGet( "" )]
         public async Task<IActionResult> GetSeller() {
             var request = await BLLSeller.ReadSeller();
+            return Ok( request );
+        }
+
+        [HttpPut( "" )]
+        public async Task<IActionResult> UpdateSeller( SellerRequest sellerRequest ) {
+            var request = await BLLSeller.UpdateSeller( sellerRequest );
+
+            if( request.Status == false ) {
+                var FormatIdError = new {
+                    type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                    title = "One or more validation errors occurred.",
+                    status = 400,
+                    errors = new {
+                        Id = new string[]{ "The Email is required." }
+                    }
+                };
+                return Ok( FormatIdError );
+            }
+
             return Ok( request );
         }
     #endregion

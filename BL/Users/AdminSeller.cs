@@ -47,7 +47,7 @@ public class AdminSeller {
             var infoBrand = await commandStoredProcedure.ExecuteReaderAsync();
 
             while( infoBrand.Read() ) {
-                results.Id          = infoBrand.GetGuid( "Id" );
+                results.Id          = infoBrand.GetString( "Id" );
                 results.Name        = infoBrand.GetString( "Nombre" );
                 results.LastName    = infoBrand.GetString( "Apellidos" );
                 results.RFC         = infoBrand.GetString( "RFC" );
@@ -129,5 +129,69 @@ public class AdminSeller {
         }
 
         return FormatResponse;
+    }
+
+    public async Task<SellerResponse> UpdateSeller( SellerRequest SellerRequest ) {
+        SellerResponse results = new SellerResponse();
+
+        if( SellerRequest.Id != null ) {
+            using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
+                connection.Open();
+
+                var commandStoredProcedure = new SqlCommand {
+                    Connection  = connection,
+                    CommandText = "[dbo].[AdministracionVendedores]",
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                commandStoredProcedure.Parameters.AddWithValue( "@Id", SellerRequest.Id );
+                commandStoredProcedure.Parameters.AddWithValue( "@Nombre", SellerRequest.Name );
+                commandStoredProcedure.Parameters.AddWithValue( "@Apellidos", SellerRequest.LastName );
+                commandStoredProcedure.Parameters.AddWithValue( "@RFC", SellerRequest.RFC );
+                commandStoredProcedure.Parameters.AddWithValue( "@Direccion", SellerRequest.Address );
+                commandStoredProcedure.Parameters.AddWithValue( "@Correo", SellerRequest.Email );
+                commandStoredProcedure.Parameters.AddWithValue( "@Telefono", SellerRequest.PhoneNumber );
+                commandStoredProcedure.Parameters.AddWithValue( "@UserName", SellerRequest.UserName );
+                commandStoredProcedure.Parameters.AddWithValue( "@Password", SellerRequest.Password );
+                commandStoredProcedure.Parameters.AddWithValue( "@Opcion", "Actualizar" );
+
+                SqlParameter successStatus  = new SqlParameter();
+                successStatus.ParameterName = "@Exito";
+                successStatus.SqlDbType     = SqlDbType.Bit;
+                successStatus.Direction     = ParameterDirection.Output;
+
+                commandStoredProcedure.Parameters.Add( successStatus );
+
+                SqlParameter message  = new SqlParameter();
+                message.ParameterName = "@Mensaje";
+                message.SqlDbType     = SqlDbType.VarChar;
+                message.Direction     = ParameterDirection.Output;
+                message.Size          = 4000;
+
+                commandStoredProcedure.Parameters.Add( message );
+
+                var infoBrand = await commandStoredProcedure.ExecuteReaderAsync();
+
+                while( infoBrand.Read() ) {
+                    results.Id          = infoBrand.GetString( "Nombre" );
+                    results.Name        = infoBrand.GetString( "Nombre" );
+                    results.LastName    = infoBrand.GetString( "Apellidos" );
+                    results.RFC         = infoBrand.GetString( "RFC" );
+                    results.Address     = infoBrand.GetString( "Direccion" );
+                    results.Email       = infoBrand.GetString( "Correo" );
+                    results.PhoneNumber = infoBrand.GetString( "Telefono" );
+                    results.UserName    = infoBrand.GetString( "UserName" );
+                }
+
+                connection.Close();
+                results.Status  = ( bool ) successStatus.Value;
+                results.Message = ( string ) message.Value; 
+            }
+        } else {
+            results.Status  = false;
+            results.Message = "The ID is required.";
+        }
+
+        return results;
     }
 }
