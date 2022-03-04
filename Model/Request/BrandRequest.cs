@@ -2,11 +2,6 @@ using System.ComponentModel.DataAnnotations;
 namespace Unach.Inventory.API.Model.Request;
 
 public class BrandRequest {
-    [Key]
-    [StringLength(36)]
-    [Required( ErrorMessage = "The ID is required." )]
-    [MinLength( 36, ErrorMessage = "The ID must have a minimum of 36 characters." )]
-	[MaxLength( 36, ErrorMessage = "The ID must have a maximum of 36 characters." )]
     public string? Id { get; set; }
 
     [StringLength(50)]

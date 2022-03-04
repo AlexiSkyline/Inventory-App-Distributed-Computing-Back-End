@@ -39,7 +39,7 @@ public class SellerController :ControllerBase {
                     title = "One or more validation errors occurred.",
                     status = 400,
                     errors = new {
-                        Id = new string[]{ "The Email is required." }
+                        Id = new string[]{ "The ID is required." }
                     }
                 };
                 return Ok( FormatIdError );

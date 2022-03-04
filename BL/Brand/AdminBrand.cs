@@ -12,49 +12,44 @@ public class AdminBrand {
         BrandRequest BrandRequest = new BrandRequest();
         BrandRequest.Description  = descriptionRequest.Description;
 
-        if( BrandRequest.Description != null ) {
-            using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
-                connection.Open();
+        using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
+            connection.Open();
 
-                var commandStoredProcedure = new SqlCommand {
-                    Connection  = connection,
-                    CommandText = "[dbo].[AdministracionMarcas]",
-                    CommandType = CommandType.StoredProcedure
-                };
+            var commandStoredProcedure = new SqlCommand {
+                Connection  = connection,
+                CommandText = "[dbo].[AdministracionMarcas]",
+                CommandType = CommandType.StoredProcedure
+            };
 
-                commandStoredProcedure.Parameters.AddWithValue( "@Id", BrandRequest.Id );
-                commandStoredProcedure.Parameters.AddWithValue( "@Descripcion", BrandRequest.Description );
-                commandStoredProcedure.Parameters.AddWithValue( "@Opcion", "Insertar" );
+            commandStoredProcedure.Parameters.AddWithValue( "@Id", BrandRequest.Id );
+            commandStoredProcedure.Parameters.AddWithValue( "@Descripcion", BrandRequest.Description );
+            commandStoredProcedure.Parameters.AddWithValue( "@Opcion", "Insertar" );
 
-                SqlParameter successStatus  = new SqlParameter();
-                successStatus.ParameterName = "@Exito";
-                successStatus.SqlDbType     = SqlDbType.Bit;
-                successStatus.Direction     = ParameterDirection.Output;
+            SqlParameter successStatus  = new SqlParameter();
+            successStatus.ParameterName = "@Exito";
+            successStatus.SqlDbType     = SqlDbType.Bit;
+            successStatus.Direction     = ParameterDirection.Output;
 
-                commandStoredProcedure.Parameters.Add( successStatus );
+            commandStoredProcedure.Parameters.Add( successStatus );
 
-                SqlParameter message  = new SqlParameter();
-                message.ParameterName = "@Mensaje";
-                message.SqlDbType     = SqlDbType.VarChar;
-                message.Direction     = ParameterDirection.Output;
-                message.Size          = 4000;
+            SqlParameter message  = new SqlParameter();
+            message.ParameterName = "@Mensaje";
+            message.SqlDbType     = SqlDbType.VarChar;
+            message.Direction     = ParameterDirection.Output;
+            message.Size          = 4000;
 
-                commandStoredProcedure.Parameters.Add( message );
+            commandStoredProcedure.Parameters.Add( message );
 
-                var infoBrand = await commandStoredProcedure.ExecuteReaderAsync();
+            var infoBrand = await commandStoredProcedure.ExecuteReaderAsync();
 
-                while( infoBrand.Read() ) {
-                    results.Id          = infoBrand.GetGuid( "Id" );
-                    results.Description = infoBrand.GetString( "Descripcion" );
-                }
-
-                connection.Close();
-                results.Status  = ( bool ) successStatus.Value;
-                results.Message = ( string ) message.Value; 
+            while( infoBrand.Read() ) {
+                results.Id          = infoBrand.GetGuid( "Id" );
+                results.Description = infoBrand.GetString( "Descripcion" );
             }
-        } else {
-            results.Status  = false;
-            results.Message = "The ID and Description cannot be Empty";
+
+            connection.Close();
+            results.Status  = ( bool ) successStatus.Value;
+            results.Message = ( string ) message.Value; 
         }
 
         return results;
@@ -120,52 +115,48 @@ public class AdminBrand {
         return formatResponse;
     }
 
-    public async Task<BrandResponse> UpdateBrand( BrandRequest BrandRequest ) {
+    public async Task<BrandResponse> UpdateBrand( string IdBrand, BrandRequest BrandRequest ) {
         BrandResponse results = new BrandResponse();
+        BrandRequest.Id = IdBrand;
 
-        if( BrandRequest.Id != null && BrandRequest.Description != null ) {
-            using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
-                connection.Open();
+        using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
+            connection.Open();
 
-                var commandStoredProcedure = new SqlCommand {
-                    Connection  = connection,
-                    CommandText = "[dbo].[AdministracionMarcas]",
-                    CommandType = CommandType.StoredProcedure
-                };
+            var commandStoredProcedure = new SqlCommand {
+                Connection  = connection,
+                CommandText = "[dbo].[AdministracionMarcas]",
+                CommandType = CommandType.StoredProcedure
+            };
 
-                commandStoredProcedure.Parameters.AddWithValue( "@Id", BrandRequest.Id );
-                commandStoredProcedure.Parameters.AddWithValue( "@Descripcion", BrandRequest.Description );
-                commandStoredProcedure.Parameters.AddWithValue( "@Opcion", "Actualizar" );
+            commandStoredProcedure.Parameters.AddWithValue( "@Id", BrandRequest.Id );
+            commandStoredProcedure.Parameters.AddWithValue( "@Descripcion", BrandRequest.Description );
+            commandStoredProcedure.Parameters.AddWithValue( "@Opcion", "Actualizar" );
 
-                SqlParameter successStatus  = new SqlParameter();
-                successStatus.ParameterName = "@Exito";
-                successStatus.SqlDbType     = SqlDbType.Bit;
-                successStatus.Direction     = ParameterDirection.Output;
+            SqlParameter successStatus  = new SqlParameter();
+            successStatus.ParameterName = "@Exito";
+            successStatus.SqlDbType     = SqlDbType.Bit;
+            successStatus.Direction     = ParameterDirection.Output;
 
-                commandStoredProcedure.Parameters.Add( successStatus );
+            commandStoredProcedure.Parameters.Add( successStatus );
 
-                SqlParameter message  = new SqlParameter();
-                message.ParameterName = "@Mensaje";
-                message.SqlDbType     = SqlDbType.VarChar;
-                message.Direction     = ParameterDirection.Output;
-                message.Size          = 4000;
+            SqlParameter message  = new SqlParameter();
+            message.ParameterName = "@Mensaje";
+            message.SqlDbType     = SqlDbType.VarChar;
+            message.Direction     = ParameterDirection.Output;
+            message.Size          = 4000;
 
-                commandStoredProcedure.Parameters.Add( message );
+            commandStoredProcedure.Parameters.Add( message );
 
-                var infoBrand = await commandStoredProcedure.ExecuteReaderAsync();
+            var infoBrand = await commandStoredProcedure.ExecuteReaderAsync();
 
-                while( infoBrand.Read() ) {
-                    results.Id          = infoBrand.GetGuid( "Id" );
-                    results.Description = infoBrand.GetString( "Descripcion" );
-                }
-
-                connection.Close();
-                results.Status  = ( bool ) successStatus.Value;
-                results.Message = ( string ) message.Value; 
+            while( infoBrand.Read() ) {
+                results.Id          = infoBrand.GetGuid( "Id" );
+                results.Description = infoBrand.GetString( "Descripcion" );
             }
-        } else {
-            results.Status  = false;
-            results.Message = "The ID and Description cannot be Empty";
+
+            connection.Close();
+            results.Status  = ( bool ) successStatus.Value;
+            results.Message = ( string ) message.Value; 
         }
 
         return results;
@@ -217,8 +208,7 @@ public class AdminBrand {
                 results.Message = ( string ) message.Value; 
             }
         } else {
-            results.Status  = false;
-            results.Message = "The ID cannot be Empty";
+            results.Status = false;
         }
 
         return results;

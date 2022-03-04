@@ -120,8 +120,8 @@ public class AdminUnitMeasurement {
         return FormatResponse;
     }
 
-    public async Task<BrandResponse> UpdateUnitMeasurement( UnitMeasurementRequest unitMeasurementRequest ) {
-        BrandResponse results = new BrandResponse();
+    public async Task<UnitMeasurementResponse> UpdateUnitMeasurement( UnitMeasurementRequest unitMeasurementRequest ) {
+        UnitMeasurementResponse results = new UnitMeasurementResponse();
 
         if( unitMeasurementRequest.Id != null && unitMeasurementRequest.Description != null ) {
             using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
