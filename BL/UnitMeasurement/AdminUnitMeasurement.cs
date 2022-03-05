@@ -7,54 +7,46 @@ using Unach.Inventory.API.Model;
 namespace Unach.Inventory.API.BL.UnitMeasurement;
 
 public class AdminUnitMeasurement {
-    public async Task<UnitMeasurementResponse> CreateUnitMeasurement( DescriptionRequest descriptionRequest ) {
+    public async Task<UnitMeasurementResponse> CreateUnitMeasurement( UnitMeasurementRequest unitMeasurement ) {
         UnitMeasurementResponse results = new UnitMeasurementResponse();
-        UnitMeasurementRequest unitMeasurement = new UnitMeasurementRequest();
-        unitMeasurement.Description  = descriptionRequest.Description;
 
-        if( unitMeasurement.Description != null ) {
-            using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
-                connection.Open();
+        using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
+            connection.Open();
 
-                var commandStoredProcedure = new SqlCommand {
-                    Connection  = connection,
-                    CommandText = "[dbo].[AdministracionUnidadesMedidas]",
-                    CommandType = CommandType.StoredProcedure
-                };
+            var commandStoredProcedure = new SqlCommand {
+                Connection  = connection,
+                CommandText = "[dbo].[AdministracionUnidadesMedidas]",
+                CommandType = CommandType.StoredProcedure
+            };
 
-                commandStoredProcedure.Parameters.AddWithValue( "@Id", unitMeasurement.Id );
-                commandStoredProcedure.Parameters.AddWithValue( "@Descripcion", unitMeasurement.Description );
-                commandStoredProcedure.Parameters.AddWithValue( "@Opcion", "Insertar" );
+            commandStoredProcedure.Parameters.AddWithValue( "@Descripcion", unitMeasurement.Description );
+            commandStoredProcedure.Parameters.AddWithValue( "@Opcion", "Insertar" );
 
-                SqlParameter successStatus  = new SqlParameter();
-                successStatus.ParameterName = "@Exito";
-                successStatus.SqlDbType     = SqlDbType.Bit;
-                successStatus.Direction     = ParameterDirection.Output;
+            SqlParameter successStatus  = new SqlParameter();
+            successStatus.ParameterName = "@Exito";
+            successStatus.SqlDbType     = SqlDbType.Bit;
+            successStatus.Direction     = ParameterDirection.Output;
 
-                commandStoredProcedure.Parameters.Add( successStatus );
+            commandStoredProcedure.Parameters.Add( successStatus );
 
-                SqlParameter message  = new SqlParameter();
-                message.ParameterName = "@Mensaje";
-                message.SqlDbType     = SqlDbType.VarChar;
-                message.Direction     = ParameterDirection.Output;
-                message.Size          = 4000;
+            SqlParameter message  = new SqlParameter();
+            message.ParameterName = "@Mensaje";
+            message.SqlDbType     = SqlDbType.VarChar;
+            message.Direction     = ParameterDirection.Output;
+            message.Size          = 4000;
 
-                commandStoredProcedure.Parameters.Add( message );
+            commandStoredProcedure.Parameters.Add( message );
 
-                var infoUnitMeasurement = await commandStoredProcedure.ExecuteReaderAsync();
+            var infoUnitMeasurement = await commandStoredProcedure.ExecuteReaderAsync();
 
-                while( infoUnitMeasurement.Read() ) {
-                    results.Id          = infoUnitMeasurement.GetGuid( "Id" );
-                    results.Description = infoUnitMeasurement.GetString( "Descripcion" );
-                }
-
-                connection.Close();
-                results.Status  = ( bool ) successStatus.Value;
-                results.Message = ( string ) message.Value; 
+            while( infoUnitMeasurement.Read() ) {
+                results.Id          = infoUnitMeasurement.GetGuid( "Id" );
+                results.Description = infoUnitMeasurement.GetString( "Descripcion" );
             }
-        } else {
-            results.Status  = false;
-            results.Message = "The ID and Description cannot be Empty";
+
+            connection.Close();
+            results.Status  = ( bool ) successStatus.Value;
+            results.Message = ( string ) message.Value; 
         }
 
         return results;
@@ -108,119 +100,107 @@ public class AdminUnitMeasurement {
 
         FormatResponse FormatResponse = new FormatResponse();
         FormatResponse.Results = results;
+        FormatResponse.Message = messageWarning.Message;
+        FormatResponse.Status  = messageWarning.Status;
 
         if( results.Count == 0 ) {
             FormatResponse.Message = "The table is empty";
-            FormatResponse.Status  = false;
-        } else {
-            FormatResponse.Message = messageWarning.Message;
-            FormatResponse.Status  = messageWarning.Status;
         }
 
         return FormatResponse;
     }
 
-    public async Task<UnitMeasurementResponse> UpdateUnitMeasurement( UnitMeasurementRequest unitMeasurementRequest ) {
+    public async Task<UnitMeasurementResponse> UpdateUnitMeasurement( string IdUnit, UnitMeasurementRequest unitMeasurementRequest ) {
         UnitMeasurementResponse results = new UnitMeasurementResponse();
+        unitMeasurementRequest.Id       = IdUnit;
 
-        if( unitMeasurementRequest.Id != null && unitMeasurementRequest.Description != null ) {
-            using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
-                connection.Open();
+        using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
+            connection.Open();
 
-                var commandStoredProcedure = new SqlCommand {
-                    Connection  = connection,
-                    CommandText = "[dbo].[AdministracionUnidadesMedidas]",
-                    CommandType = CommandType.StoredProcedure
-                };
+            var commandStoredProcedure = new SqlCommand {
+                Connection  = connection,
+                CommandText = "[dbo].[AdministracionUnidadesMedidas]",
+                CommandType = CommandType.StoredProcedure
+            };
 
-                commandStoredProcedure.Parameters.AddWithValue( "@Id", unitMeasurementRequest.Id );
-                commandStoredProcedure.Parameters.AddWithValue( "@Descripcion", unitMeasurementRequest.Description );
-                commandStoredProcedure.Parameters.AddWithValue( "@Opcion", "Actualizar" );
+            commandStoredProcedure.Parameters.AddWithValue( "@Id", unitMeasurementRequest.Id );
+            commandStoredProcedure.Parameters.AddWithValue( "@Descripcion", unitMeasurementRequest.Description );
+            commandStoredProcedure.Parameters.AddWithValue( "@Opcion", "Actualizar" );
 
-                SqlParameter successStatus  = new SqlParameter();
-                successStatus.ParameterName = "@Exito";
-                successStatus.SqlDbType     = SqlDbType.Bit;
-                successStatus.Direction     = ParameterDirection.Output;
+            SqlParameter successStatus  = new SqlParameter();
+            successStatus.ParameterName = "@Exito";
+            successStatus.SqlDbType     = SqlDbType.Bit;
+            successStatus.Direction     = ParameterDirection.Output;
 
-                commandStoredProcedure.Parameters.Add( successStatus );
+            commandStoredProcedure.Parameters.Add( successStatus );
 
-                SqlParameter message  = new SqlParameter();
-                message.ParameterName = "@Mensaje";
-                message.SqlDbType     = SqlDbType.VarChar;
-                message.Direction     = ParameterDirection.Output;
-                message.Size          = 4000;
+            SqlParameter message  = new SqlParameter();
+            message.ParameterName = "@Mensaje";
+            message.SqlDbType     = SqlDbType.VarChar;
+            message.Direction     = ParameterDirection.Output;
+            message.Size          = 4000;
 
-                commandStoredProcedure.Parameters.Add( message );
+            commandStoredProcedure.Parameters.Add( message );
 
-                var infoBrand = await commandStoredProcedure.ExecuteReaderAsync();
+            var infoBrand = await commandStoredProcedure.ExecuteReaderAsync();
 
-                while( infoBrand.Read() ) {
-                    results.Id          = infoBrand.GetGuid( "Id" );
-                    results.Description = infoBrand.GetString( "Descripcion" );
-                }
-
-                connection.Close();
-                results.Status  = ( bool ) successStatus.Value;
-                results.Message = ( string ) message.Value; 
+            while( infoBrand.Read() ) {
+                results.Id          = infoBrand.GetGuid( "Id" );
+                results.Description = infoBrand.GetString( "Descripcion" );
             }
-        } else {
-            results.Status  = false;
-            results.Message = "The ID and Description cannot be Empty";
+
+            connection.Close();
+            results.Status  = ( bool ) successStatus.Value;
+            results.Message = ( string ) message.Value; 
         }
 
         return results;
     }
 
     public async Task<UnitMeasurementResponse> DeleteUnitMeasurement( string IdUnitMeasurement ) {
-        UnitMeasurementResponse results = new UnitMeasurementResponse();
+        UnitMeasurementResponse results        = new UnitMeasurementResponse();
         UnitMeasurementRequest unitMeasurement = new UnitMeasurementRequest();
-        unitMeasurement.Id = IdUnitMeasurement;
+        unitMeasurement.Id                     = IdUnitMeasurement;
 
-        if( unitMeasurement.Id != null ) {
-            using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
-                connection.Open();
+        using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
+            connection.Open();
 
-                var commandStoredProcedure = new SqlCommand {
-                    Connection  = connection,
-                    CommandText = "[dbo].[AdministracionUnidadesMedidas]",
-                    CommandType = CommandType.StoredProcedure
-                };
+            var commandStoredProcedure = new SqlCommand {
+                Connection  = connection,
+                CommandText = "[dbo].[AdministracionUnidadesMedidas]",
+                CommandType = CommandType.StoredProcedure
+            };
 
-                commandStoredProcedure.Parameters.AddWithValue( "@Id", unitMeasurement.Id );
-                commandStoredProcedure.Parameters.AddWithValue( "@Descripcion", unitMeasurement.Description );
-                commandStoredProcedure.Parameters.AddWithValue( "@Opcion", "Eliminar" );
+            commandStoredProcedure.Parameters.AddWithValue( "@Id", unitMeasurement.Id );
+            commandStoredProcedure.Parameters.AddWithValue( "@Opcion", "Eliminar" );
 
-                SqlParameter successStatus  = new SqlParameter();
-                successStatus.ParameterName = "@Exito";
-                successStatus.SqlDbType     = SqlDbType.Bit;
-                successStatus.Direction     = ParameterDirection.Output;
+            SqlParameter successStatus  = new SqlParameter();
+            successStatus.ParameterName = "@Exito";
+            successStatus.SqlDbType     = SqlDbType.Bit;
+            successStatus.Direction     = ParameterDirection.Output;
 
-                commandStoredProcedure.Parameters.Add( successStatus );
+            commandStoredProcedure.Parameters.Add( successStatus );
 
-                SqlParameter message  = new SqlParameter();
-                message.ParameterName = "@Mensaje";
-                message.SqlDbType     = SqlDbType.VarChar;
-                message.Direction     = ParameterDirection.Output;
-                message.Size          = 4000;
+            SqlParameter message  = new SqlParameter();
+            message.ParameterName = "@Mensaje";
+            message.SqlDbType     = SqlDbType.VarChar;
+            message.Direction     = ParameterDirection.Output;
+            message.Size          = 4000;
 
-                commandStoredProcedure.Parameters.Add( message );
+            commandStoredProcedure.Parameters.Add( message );
 
-                var infoUnitMeasurement = await commandStoredProcedure.ExecuteReaderAsync();
+            var infoUnitMeasurement = await commandStoredProcedure.ExecuteReaderAsync();
 
-                while( infoUnitMeasurement.Read() ) {
-                    results.Id          = infoUnitMeasurement.GetGuid( "Id" );
-                    results.Description = infoUnitMeasurement.GetString( "Descripcion" );
-                }
-
-                connection.Close();
-                results.Status  = ( bool ) successStatus.Value;
-                results.Message = ( string ) message.Value; 
+            while( infoUnitMeasurement.Read() ) {
+                results.Id          = infoUnitMeasurement.GetGuid( "Id" );
+                results.Description = infoUnitMeasurement.GetString( "Descripcion" );
             }
-        } else {
-            results.Status  = false;
-            results.Message = "The ID cannot be Empty";
-        }
 
+            connection.Close();
+            results.Status  = ( bool ) successStatus.Value;
+            results.Message = ( string ) message.Value; 
+        }
+        
         return results;
     }
 

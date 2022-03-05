@@ -7,10 +7,8 @@ using Unach.Inventory.API.Model;
 namespace Unach.Inventory.API.BL.Brand;
 
 public class AdminBrand {
-    public async Task<BrandResponse> CreateBrand( DescriptionRequest descriptionRequest ) {
-        BrandResponse results     = new BrandResponse();
-        BrandRequest BrandRequest = new BrandRequest();
-        BrandRequest.Description  = descriptionRequest.Description;
+    public async Task<BrandResponse> CreateBrand( BrandRequest BrandRequest ) {
+        BrandResponse results = new BrandResponse();
 
         using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
             connection.Open();
@@ -21,7 +19,6 @@ public class AdminBrand {
                 CommandType = CommandType.StoredProcedure
             };
 
-            commandStoredProcedure.Parameters.AddWithValue( "@Id", BrandRequest.Id );
             commandStoredProcedure.Parameters.AddWithValue( "@Descripcion", BrandRequest.Description );
             commandStoredProcedure.Parameters.AddWithValue( "@Opcion", "Insertar" );
 
@@ -103,13 +100,11 @@ public class AdminBrand {
 
         FormatResponse formatResponse = new FormatResponse();
         formatResponse.Results = results;
+        formatResponse.Message = messageWarning.Message;
+        formatResponse.Status  = messageWarning.Status;
 
         if( results.Count == 0 ) {
             formatResponse.Message = "The table is empty";
-            formatResponse.Status  = false;
-        } else {
-            formatResponse.Message = messageWarning.Message;
-            formatResponse.Status  = messageWarning.Status;
         }
 
         return formatResponse;
@@ -117,7 +112,7 @@ public class AdminBrand {
 
     public async Task<BrandResponse> UpdateBrand( string IdBrand, BrandRequest BrandRequest ) {
         BrandResponse results = new BrandResponse();
-        BrandRequest.Id = IdBrand;
+        BrandRequest.Id       = IdBrand;
 
         using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
             connection.Open();
@@ -167,48 +162,43 @@ public class AdminBrand {
         BrandRequest BrandRequest = new BrandRequest();
         BrandRequest.Id           = IdBrand;
 
-        if( BrandRequest.Id != null ) {
-            using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
-                connection.Open();
+        using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
+            connection.Open();
 
-                var commandStoredProcedure = new SqlCommand {
-                    Connection  = connection,
-                    CommandText = "[dbo].[AdministracionMarcas]",
-                    CommandType = CommandType.StoredProcedure
-                };
+            var commandStoredProcedure = new SqlCommand {
+                Connection  = connection,
+                CommandText = "[dbo].[AdministracionMarcas]",
+                CommandType = CommandType.StoredProcedure
+            };
 
-                commandStoredProcedure.Parameters.AddWithValue( "@Id", BrandRequest.Id );
-                commandStoredProcedure.Parameters.AddWithValue( "@Descripcion", BrandRequest.Description );
-                commandStoredProcedure.Parameters.AddWithValue( "@Opcion", "Eliminar" );
+            commandStoredProcedure.Parameters.AddWithValue( "@Id", BrandRequest.Id );
+            commandStoredProcedure.Parameters.AddWithValue( "@Opcion", "Eliminar" );
 
-                SqlParameter successStatus  = new SqlParameter();
-                successStatus.ParameterName = "@Exito";
-                successStatus.SqlDbType     = SqlDbType.Bit;
-                successStatus.Direction     = ParameterDirection.Output;
+            SqlParameter successStatus  = new SqlParameter();
+            successStatus.ParameterName = "@Exito";
+            successStatus.SqlDbType     = SqlDbType.Bit;
+            successStatus.Direction     = ParameterDirection.Output;
 
-                commandStoredProcedure.Parameters.Add( successStatus );
+            commandStoredProcedure.Parameters.Add( successStatus );
 
-                SqlParameter message  = new SqlParameter();
-                message.ParameterName = "@Mensaje";
-                message.SqlDbType     = SqlDbType.VarChar;
-                message.Direction     = ParameterDirection.Output;
-                message.Size          = 4000;
+            SqlParameter message  = new SqlParameter();
+            message.ParameterName = "@Mensaje";
+            message.SqlDbType     = SqlDbType.VarChar;
+            message.Direction     = ParameterDirection.Output;
+            message.Size          = 4000;
 
-                commandStoredProcedure.Parameters.Add( message );
+            commandStoredProcedure.Parameters.Add( message );
 
-                var infoUnitMeasurement = await commandStoredProcedure.ExecuteReaderAsync();
+            var infoUnitMeasurement = await commandStoredProcedure.ExecuteReaderAsync();
 
-                while( infoUnitMeasurement.Read() ) {
-                    results.Id          = infoUnitMeasurement.GetGuid( "Id" );
-                    results.Description = infoUnitMeasurement.GetString( "Descripcion" );
-                }
-
-                connection.Close();
-                results.Status  = ( bool ) successStatus.Value;
-                results.Message = ( string ) message.Value; 
+            while( infoUnitMeasurement.Read() ) {
+                results.Id          = infoUnitMeasurement.GetGuid( "Id" );
+                results.Description = infoUnitMeasurement.GetString( "Descripcion" );
             }
-        } else {
-            results.Status = false;
+
+            connection.Close();
+            results.Status  = ( bool ) successStatus.Value;
+            results.Message = ( string ) message.Value; 
         }
 
         return results;

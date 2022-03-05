@@ -13,8 +13,8 @@ public class BrandController : ControllerBase {
 
     #region  "Methods"
         [HttpPost( "" )]
-        public async Task<IActionResult> CreateBrand( DescriptionRequest description ) {
-            var request = await BLLBrand.CreateBrand( description );
+        public async Task<IActionResult> CreateBrand( BrandRequest BrandRequest ) {
+            var request = await BLLBrand.CreateBrand( BrandRequest );
             return Ok( request );
         }
 
@@ -33,6 +33,12 @@ public class BrandController : ControllerBase {
             }
 
             var request = await BLLBrand.UpdateBrand( id, BrandModel );
+
+            if( request.Status == false ) {
+                var message = new { request.Message };
+                return Ok( message );
+            }
+
             return Ok( request );
         }
 

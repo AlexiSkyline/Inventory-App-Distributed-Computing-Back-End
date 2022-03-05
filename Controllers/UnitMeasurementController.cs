@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Unach.Inventory.API.BL.UnitMeasurement;
 using Unach.Inventory.API.Model;
 using Unach.Inventory.API.Model.Request;
-using Unach.Inventory.API.Model.Response;
 namespace Unach.Inventory.API.Controllers;
 
 [ApiController]
@@ -14,14 +13,8 @@ public class UnitMeasurementController : ControllerBase {
 
     #region "Methods"
         [HttpPost( "" )]
-        public async Task<IActionResult> CreateUnitMeasurement( DescriptionRequest description ) {
-            var request = await BLLUnitMeasurement.CreateUnitMeasurement( description );
-
-            if( request.Status == false ) {
-                var message = new { request.Message };
-                return Ok( message );
-            }
-
+        public async Task<IActionResult> CreateUnitMeasurement( UnitMeasurementRequest unitMeasurement ) {
+            var request = await BLLUnitMeasurement.CreateUnitMeasurement( unitMeasurement );
             return Ok( request );
         }
 
@@ -31,9 +24,15 @@ public class UnitMeasurementController : ControllerBase {
             return Ok( request );
         }
 
-        [HttpPut( "" )]
-        public async Task<IActionResult> UpdateUnitMeasurement( UnitMeasurementRequest unitMeasurementRequest ) {
-            var request = await BLLUnitMeasurement.UpdateUnitMeasurement( unitMeasurementRequest );
+        [HttpPut( "{id}" )]
+        public async Task<IActionResult> UpdateUnitMeasurement( string id, UnitMeasurementRequest unitMeasurementRequest ) {
+            ValidateID validateID = new ValidateID();
+            
+            if( !validateID.IsValid(id) ) {
+                return Ok( validateID.Message );
+            }
+            
+            var request = await BLLUnitMeasurement.UpdateUnitMeasurement( id, unitMeasurementRequest );
 
             if( request.Status == false ) {
                 var message = new { request.Message };
@@ -45,10 +44,16 @@ public class UnitMeasurementController : ControllerBase {
         
         [HttpDelete( "{id}" )]
         public async Task<ActionResult<UnitMeasurementRequest>> DeleteUnitMeasurement( string id ) {
+            ValidateID validateID = new ValidateID();
+            
+            if( !validateID.IsValid(id) ) {
+                return Ok( validateID.Message );
+            }
+            
             var request = await BLLUnitMeasurement.DeleteUnitMeasurement( id );
 
             if( request.Status == false ) {
-                var message = new { request.Message };
+                var message = new { request.Message, status = 401 };
                 return Ok( message );
             }
 
