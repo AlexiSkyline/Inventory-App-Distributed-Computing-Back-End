@@ -130,7 +130,7 @@ public class AdminSeller {
         return FormatResponse;
     }
 
-    public async Task<SellerResponse> UpdateSeller( string id, SellerRequest SellerRequest ) {
+    public async Task<SellerResponse> UpdateSeller( Guid id, SellerRequest SellerRequest ) {
         SellerResponse results = new SellerResponse();
         SellerRequest.Id       = id;
 
@@ -187,6 +187,59 @@ public class AdminSeller {
             results.Message = ( string ) message.Value; 
         }
 
+        return results;
+    }
+
+    public async Task<SellerResponse> DeleteSeller( Guid IdUnit ) {
+        SellerResponse results      = new SellerResponse();
+        SellerRequest sellerRequest = new SellerRequest();
+        sellerRequest.Id            = IdUnit;
+
+        using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
+            connection.Open();
+
+            var commandStoredProcedure = new SqlCommand {
+                Connection  = connection,
+                CommandText = "[dbo].[AdministracionUnidadesMedidas]",
+                CommandType = CommandType.StoredProcedure
+            };
+
+            commandStoredProcedure.Parameters.AddWithValue( "@Id", sellerRequest.Id );
+            commandStoredProcedure.Parameters.AddWithValue( "@Opcion", "Eliminar" );
+
+            SqlParameter successStatus  = new SqlParameter();
+            successStatus.ParameterName = "@Exito";
+            successStatus.SqlDbType     = SqlDbType.Bit;
+            successStatus.Direction     = ParameterDirection.Output;
+
+            commandStoredProcedure.Parameters.Add( successStatus );
+
+            SqlParameter message  = new SqlParameter();
+            message.ParameterName = "@Mensaje";
+            message.SqlDbType     = SqlDbType.VarChar;
+            message.Direction     = ParameterDirection.Output;
+            message.Size          = 4000;
+
+            commandStoredProcedure.Parameters.Add( message );
+
+            var infoBrand = await commandStoredProcedure.ExecuteReaderAsync();
+
+            while( infoBrand.Read() ) {
+                results.Id          = infoBrand.GetGuid( "Nombre" );
+                results.Name        = infoBrand.GetString( "Nombre" );
+                results.LastName    = infoBrand.GetString( "Apellidos" );
+                results.RFC         = infoBrand.GetString( "RFC" );
+                results.Address     = infoBrand.GetString( "Direccion" );
+                results.Email       = infoBrand.GetString( "Correo" );
+                results.PhoneNumber = infoBrand.GetString( "Telefono" );
+                results.UserName    = infoBrand.GetString( "UserName" );
+            }
+
+            connection.Close();
+            results.Status  = ( bool ) successStatus.Value;
+            results.Message = ( string ) message.Value; 
+        }
+        
         return results;
     }
 }

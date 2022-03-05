@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Unach.Inventory.API.BL.UnitMeasurement;
-using Unach.Inventory.API.Model;
 using Unach.Inventory.API.Model.Request;
 namespace Unach.Inventory.API.Controllers;
 
@@ -25,17 +24,11 @@ public class UnitMeasurementController : ControllerBase {
         }
 
         [HttpPut( "{id}" )]
-        public async Task<IActionResult> UpdateUnitMeasurement( string id, UnitMeasurementRequest unitMeasurementRequest ) {
-            ValidateID validateID = new ValidateID();
-            
-            if( !validateID.IsValid(id) ) {
-                return Ok( validateID.Message );
-            }
-            
+        public async Task<IActionResult> UpdateUnitMeasurement( Guid id, UnitMeasurementRequest unitMeasurementRequest ) {
             var request = await BLLUnitMeasurement.UpdateUnitMeasurement( id, unitMeasurementRequest );
 
             if( request.Status == false ) {
-                var message = new { request.Message };
+                var message = new { request.Message, status = 401 };
                 return Ok( message );
             }
 
@@ -43,13 +36,7 @@ public class UnitMeasurementController : ControllerBase {
         }
         
         [HttpDelete( "{id}" )]
-        public async Task<ActionResult<UnitMeasurementRequest>> DeleteUnitMeasurement( string id ) {
-            ValidateID validateID = new ValidateID();
-            
-            if( !validateID.IsValid(id) ) {
-                return Ok( validateID.Message );
-            }
-            
+        public async Task<ActionResult<UnitMeasurementRequest>> DeleteUnitMeasurement( Guid id ) {
             var request = await BLLUnitMeasurement.DeleteUnitMeasurement( id );
 
             if( request.Status == false ) {

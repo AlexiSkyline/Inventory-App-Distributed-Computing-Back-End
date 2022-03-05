@@ -110,7 +110,7 @@ public class AdminUnitMeasurement {
         return FormatResponse;
     }
 
-    public async Task<UnitMeasurementResponse> UpdateUnitMeasurement( string IdUnit, UnitMeasurementRequest unitMeasurementRequest ) {
+    public async Task<UnitMeasurementResponse> UpdateUnitMeasurement( Guid IdUnit, UnitMeasurementRequest unitMeasurementRequest ) {
         UnitMeasurementResponse results = new UnitMeasurementResponse();
         unitMeasurementRequest.Id       = IdUnit;
 
@@ -157,7 +157,7 @@ public class AdminUnitMeasurement {
         return results;
     }
 
-    public async Task<UnitMeasurementResponse> DeleteUnitMeasurement( string IdUnitMeasurement ) {
+    public async Task<UnitMeasurementResponse> DeleteUnitMeasurement( Guid IdUnitMeasurement ) {
         UnitMeasurementResponse results        = new UnitMeasurementResponse();
         UnitMeasurementRequest unitMeasurement = new UnitMeasurementRequest();
         unitMeasurement.Id                     = IdUnitMeasurement;

@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Unach.Inventory.API.Model.Request;
 
 public class BrandRequest {
-    public string? Id { get; set; }
+    public Guid? Id { get; set; }
 
     [StringLength(50)]
     [Required( ErrorMessage = "The Description is required." )]     

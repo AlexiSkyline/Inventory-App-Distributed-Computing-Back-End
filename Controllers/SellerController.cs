@@ -1,12 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Unach.Inventory.API.BL.Users;
-using Unach.Inventory.API.Model;
 using Unach.Inventory.API.Model.Request;
 namespace Unach.Inventory.API.Controllers;
 
 [ApiController]
 [Route( "api/[controller]" )]
-public class SellerController :ControllerBase {
+public class SellerController : ControllerBase {
     #region "Properties"
         AdminSeller BLLSeller = new AdminSeller();
     #endregion
@@ -25,17 +24,23 @@ public class SellerController :ControllerBase {
         }
 
         [HttpPut( "{id}" )]
-        public async Task<IActionResult> UpdateSeller( string id, SellerRequest sellerRequest ) {
-            ValidateID validateID = new ValidateID();
-
-            if( !validateID.IsValid(id) ) {
-                return Ok( validateID.Message );
-            }
-
+        public async Task<IActionResult> UpdateSeller( Guid id, SellerRequest sellerRequest ) {
             var request = await BLLSeller.UpdateSeller( id, sellerRequest );
 
             if( request.Status == false ) {
-                var message = new { request.Message };
+                var message = new { request.Message, status = 401 };
+                return Ok( message );
+            }
+
+            return Ok( request );
+        }
+
+        [HttpDelete( "{id}" )]
+        public async Task<ActionResult<BrandRequest>> DeleteSeller( Guid id ) {
+            var request = await BLLSeller.DeleteSeller( id );
+
+            if( request.Status == false ) {
+                var message = new { request.Message, status = 401 };
                 return Ok( message );
             }
 

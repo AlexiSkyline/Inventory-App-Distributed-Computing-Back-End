@@ -2,11 +2,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Unach.Inventory.API.Model;
 
 public class GeneralInformation {
-	[Key]
-    [StringLength(36)]
-    [MinLength( 36, ErrorMessage = "The ID must have a Minimum of 36 characters." )]
-	[MaxLength( 36, ErrorMessage = "The ID must have a Maximum of 36 characters." )]
-    public string? Id { get; set; }
+    public Guid? Id { get; set; }
 	    
     [StringLength(50)]
     [Required( ErrorMessage = "The Name is required." )]     

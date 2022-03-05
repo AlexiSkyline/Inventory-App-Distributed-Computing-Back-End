@@ -110,7 +110,7 @@ public class AdminBrand {
         return formatResponse;
     }
 
-    public async Task<BrandResponse> UpdateBrand( string IdBrand, BrandRequest BrandRequest ) {
+    public async Task<BrandResponse> UpdateBrand( Guid IdBrand, BrandRequest BrandRequest ) {
         BrandResponse results = new BrandResponse();
         BrandRequest.Id       = IdBrand;
 
@@ -157,7 +157,7 @@ public class AdminBrand {
         return results;
     }
 
-    public async Task<BrandResponse> DeleteBrand( string IdBrand ) {
+    public async Task<BrandResponse> DeleteBrand( Guid IdBrand ) {
         BrandResponse results     = new BrandResponse();
         BrandRequest BrandRequest = new BrandRequest();
         BrandRequest.Id           = IdBrand;

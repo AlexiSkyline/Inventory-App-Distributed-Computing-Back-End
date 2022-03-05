@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Unach.Inventory.API.BL.Brand;
-using Unach.Inventory.API.Model;
 using Unach.Inventory.API.Model.Request;
 namespace Unach.Inventory.API.Controllers;
 
@@ -25,17 +24,11 @@ public class BrandController : ControllerBase {
         }
 
         [HttpPut( "{id}" )]
-        public async Task<IActionResult> UpdateUnitMeasurement( string id, BrandRequest BrandModel ) {
-            ValidateID validateID = new ValidateID();
-            
-            if( !validateID.IsValid(id) ) {
-                return Ok( validateID.Message );
-            }
-
+        public async Task<IActionResult> UpdateUnitMeasurement( Guid id, BrandRequest BrandModel ) {
             var request = await BLLBrand.UpdateBrand( id, BrandModel );
 
             if( request.Status == false ) {
-                var message = new { request.Message };
+                var message = new { request.Message, status = 401 };
                 return Ok( message );
             }
 
@@ -43,13 +36,7 @@ public class BrandController : ControllerBase {
         }
 
         [HttpDelete( "{id}" )]
-        public async Task<ActionResult<BrandRequest>> DeleteBrand( string id ) {
-            ValidateID validateID = new ValidateID();
-            
-            if( !validateID.IsValid(id) ) {
-                return Ok( validateID.Message );
-            }
-            
+        public async Task<ActionResult<BrandRequest>> DeleteBrand( Guid id ) {
             var request = await BLLBrand.DeleteBrand( id );
 
             if( request.Status == false ) {
