@@ -14,7 +14,7 @@ public class SellerController : ControllerBase {
         [HttpPost( "" )]
         public async Task<IActionResult> CreateSeller( SellerRequest sellerRequest ) {
             var request = await BLLSeller.CreateSeller( sellerRequest );
-            return Ok( request );
+            return Created( "", request );
         }
 
         [HttpGet( "" )]
@@ -29,10 +29,10 @@ public class SellerController : ControllerBase {
 
             if( request.Status == false ) {
                 var message = new { request.Message, status = 401 };
-                return Ok( message );
+                return Unauthorized( message );
             }
 
-            return Ok( request );
+            return Created( "", request );
         }
 
         [HttpDelete( "{id}" )]
@@ -41,7 +41,7 @@ public class SellerController : ControllerBase {
 
             if( request.Status == false ) {
                 var message = new { request.Message, status = 401 };
-                return Ok( message );
+                return Unauthorized( message );
             }
 
             return Ok( request );

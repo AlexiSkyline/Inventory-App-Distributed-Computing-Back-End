@@ -14,7 +14,7 @@ public class UnitMeasurementController : ControllerBase {
         [HttpPost( "" )]
         public async Task<IActionResult> CreateUnitMeasurement( UnitMeasurementRequest unitMeasurement ) {
             var request = await BLLUnitMeasurement.CreateUnitMeasurement( unitMeasurement );
-            return Ok( request );
+            return Created( "", request );
         }
 
         [HttpGet( "" )]
@@ -32,7 +32,7 @@ public class UnitMeasurementController : ControllerBase {
                 return Ok( message );
             }
 
-            return Ok( request );
+            return Created( "", request );
         }
         
         [HttpDelete( "{id}" )]

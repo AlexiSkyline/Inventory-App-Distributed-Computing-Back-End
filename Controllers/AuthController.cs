@@ -17,7 +17,7 @@ public class AuthController : ControllerBase {
 
             if( request.Status == false ) {
                 var message = new { request.Message, request.Status };
-                return Ok( message );
+                return Unauthorized( message );
             }
 
             return Ok( request );

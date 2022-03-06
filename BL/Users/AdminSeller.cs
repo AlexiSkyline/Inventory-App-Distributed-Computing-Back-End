@@ -200,7 +200,7 @@ public class AdminSeller {
 
             var commandStoredProcedure = new SqlCommand {
                 Connection  = connection,
-                CommandText = "[dbo].[AdministracionUnidadesMedidas]",
+                CommandText = "[dbo].[AdministracionVendedores]",
                 CommandType = CommandType.StoredProcedure
             };
 
@@ -225,7 +225,7 @@ public class AdminSeller {
             var infoBrand = await commandStoredProcedure.ExecuteReaderAsync();
 
             while( infoBrand.Read() ) {
-                results.Id          = infoBrand.GetGuid( "Nombre" );
+                results.Id          = infoBrand.GetGuid( "Id" );
                 results.Name        = infoBrand.GetString( "Nombre" );
                 results.LastName    = infoBrand.GetString( "Apellidos" );
                 results.RFC         = infoBrand.GetString( "RFC" );
