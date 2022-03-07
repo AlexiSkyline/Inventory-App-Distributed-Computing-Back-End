@@ -22,5 +22,17 @@ public class ClientController : ControllerBase {
             var request = await BLLClient.ReadSeller();
             return Ok( request );
         }
+
+        [HttpPut( "{id}" )]
+        public async Task<IActionResult> UpdateClient( Guid id, ClientRequest clientRequest ) {
+            var request = await BLLClient.UpdateClient( id, clientRequest );
+
+            if( request.Status == false ) {
+                var message = new { request.Message, status = 401 };
+                return Unauthorized( message );
+            }
+
+            return Created( "", request );
+        }
     #endregion
 }

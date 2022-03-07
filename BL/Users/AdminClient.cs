@@ -126,4 +126,61 @@ public class AdminClient {
 
         return FormatResponse;
     }
+
+    public async Task<ClientResponse> UpdateClient( Guid id, ClientRequest ClientRequest ) {
+        ClientResponse results = new ClientResponse();
+        ClientRequest.Id       = id;
+
+        using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
+            connection.Open();
+
+            var commandStoredProcedure = new SqlCommand {
+                Connection  = connection,
+                CommandText = "[dbo].[AdministracionClientes]",
+                CommandType = CommandType.StoredProcedure
+            };
+
+            commandStoredProcedure.Parameters.AddWithValue( "@Id", ClientRequest.Id );
+            commandStoredProcedure.Parameters.AddWithValue( "@Nombre", ClientRequest.Name );
+            commandStoredProcedure.Parameters.AddWithValue( "@Apellidos", ClientRequest.LastName );
+            commandStoredProcedure.Parameters.AddWithValue( "@RFC", ClientRequest.RFC );
+            commandStoredProcedure.Parameters.AddWithValue( "@Direccion", ClientRequest.Address );
+            commandStoredProcedure.Parameters.AddWithValue( "@Correo", ClientRequest.Email );
+            commandStoredProcedure.Parameters.AddWithValue( "@Telefono", ClientRequest.PhoneNumber );
+            commandStoredProcedure.Parameters.AddWithValue( "@Opcion", "Actualizar" );
+
+            SqlParameter successStatus  = new SqlParameter();
+            successStatus.ParameterName = "@Exito";
+            successStatus.SqlDbType     = SqlDbType.Bit;
+            successStatus.Direction     = ParameterDirection.Output;
+
+            commandStoredProcedure.Parameters.Add( successStatus );
+
+            SqlParameter message  = new SqlParameter();
+            message.ParameterName = "@Mensaje";
+            message.SqlDbType     = SqlDbType.VarChar;
+            message.Direction     = ParameterDirection.Output;
+            message.Size          = 4000;
+
+            commandStoredProcedure.Parameters.Add( message );
+
+            var infoBrand = await commandStoredProcedure.ExecuteReaderAsync();
+
+            while( infoBrand.Read() ) {
+                results.Id          = infoBrand.GetGuid( "Id" );
+                results.Name        = infoBrand.GetString( "Nombre" );
+                results.LastName    = infoBrand.GetString( "Apellidos" );
+                results.RFC         = infoBrand.GetString( "RFC" );
+                results.Address     = infoBrand.GetString( "Direccion" );
+                results.Email       = infoBrand.GetString( "Correo" );
+                results.PhoneNumber = infoBrand.GetString( "Telefono" );
+            }
+
+            connection.Close();
+            results.Status  = ( bool ) successStatus.Value;
+            results.Message = ( string ) message.Value; 
+        }
+
+        return results;
+    }
 }
