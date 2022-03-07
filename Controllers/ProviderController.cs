@@ -16,5 +16,11 @@ public class ProviderController : ControllerBase {
             var request = await BLLProvider.CreateProvider( ProviderRequest );
             return Created( "", request );
         }
+
+        [HttpGet( "" )]
+        public async Task<IActionResult> GetProviders() {
+            var request = await BLLProvider.ReadProvider();
+            return Ok( request );
+        }
     #endregion
 }
