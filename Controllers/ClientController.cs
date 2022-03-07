@@ -34,5 +34,17 @@ public class ClientController : ControllerBase {
 
             return Created( "", request );
         }
+
+        [HttpDelete( "{id}" )]
+        public async Task<ActionResult<ClientRequest>> DeleteClient( Guid id ) {
+            var request = await BLLClient.DeleteClient( id );
+
+            if( request.Status == false ) {
+                var message = new { request.Message, status = 401 };
+                return Unauthorized( message );
+            }
+
+            return Ok( request );
+        }
     #endregion
 }
