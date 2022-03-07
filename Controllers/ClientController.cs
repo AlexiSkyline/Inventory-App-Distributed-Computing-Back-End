@@ -7,14 +7,20 @@ namespace Unach.Inventory.API.Controllers;
 [Route( "api/[controller]" )]
 public class ClientController : ControllerBase {
     #region "Properties"
-        AdminClient BLLSeller = new AdminClient();
+        AdminClient BLLClient = new AdminClient();
     #endregion
 
     #region "Methods"
         [HttpPost( "" )]
         public async Task<IActionResult> CreateClient( ClientRequest clientRequest ) {
-            var request = await BLLSeller.CreateClient( clientRequest );
+            var request = await BLLClient.CreateClient( clientRequest );
             return Created( "", request );
+        }
+
+        [HttpGet( "" )]
+        public async Task<IActionResult> GetClients() {
+            var request = await BLLClient.ReadSeller();
+            return Ok( request );
         }
     #endregion
 }
