@@ -52,7 +52,7 @@ public class AdminBrand {
         return results;
     }
 
-    public async Task<Object> ReadBrands() {
+    public async Task<Object> GetBrands() {
         List<Object> results          = new List<Object>();
         SingleResponse messageWarning = new SingleResponse();
 
@@ -82,12 +82,12 @@ public class AdminBrand {
 
             commandStoredProcedure.Parameters.Add( message );
 
-            var infoUnitMeasurement = await commandStoredProcedure.ExecuteReaderAsync();
+            var infoBrand = await commandStoredProcedure.ExecuteReaderAsync();
 
-            while( infoUnitMeasurement.Read() ) {
+            while( infoBrand.Read() ) {
                 var FormatResult = new { 
-                    Id = infoUnitMeasurement.GetGuid( "Id" ), 
-                    Description = infoUnitMeasurement.GetString( "Descripcion" ) 
+                    Id = infoBrand.GetGuid( "Id" ), 
+                    Description = infoBrand.GetString( "Descripcion" ) 
                 };
 
                 results.Add( FormatResult );
@@ -189,11 +189,11 @@ public class AdminBrand {
 
             commandStoredProcedure.Parameters.Add( message );
 
-            var infoUnitMeasurement = await commandStoredProcedure.ExecuteReaderAsync();
+            var infoBrand = await commandStoredProcedure.ExecuteReaderAsync();
 
-            while( infoUnitMeasurement.Read() ) {
-                results.Id          = infoUnitMeasurement.GetGuid( "Id" );
-                results.Description = infoUnitMeasurement.GetString( "Descripcion" );
+            while( infoBrand.Read() ) {
+                results.Id          = infoBrand.GetGuid( "Id" );
+                results.Description = infoBrand.GetString( "Descripcion" );
             }
 
             connection.Close();
@@ -237,12 +237,12 @@ public class AdminBrand {
 
             commandStoredProcedure.Parameters.Add( message );
 
-            var infoUnitMeasurement = await commandStoredProcedure.ExecuteReaderAsync();
+            var infoBrand = await commandStoredProcedure.ExecuteReaderAsync();
 
-            while( infoUnitMeasurement.Read() ) {
+            while( infoBrand.Read() ) {
                 var FormatResult = new { 
-                    Id = infoUnitMeasurement.GetGuid( "Id" ), 
-                    Description = infoUnitMeasurement.GetString( "Descripcion" ) 
+                    Id = infoBrand.GetGuid( "Id" ), 
+                    Description = infoBrand.GetString( "Descripcion" ) 
                 };
 
                 results.Add( FormatResult );

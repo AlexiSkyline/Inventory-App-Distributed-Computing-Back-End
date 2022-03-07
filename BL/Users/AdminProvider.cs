@@ -42,16 +42,16 @@ public class AdminProvider {
 
             commandStoredProcedure.Parameters.Add( message );
 
-            var infoBrand = await commandStoredProcedure.ExecuteReaderAsync();
+            var infoProvider = await commandStoredProcedure.ExecuteReaderAsync();
 
-            while( infoBrand.Read() ) {
-                results.Id          = infoBrand.GetGuid( "Id" );
-                results.Name        = infoBrand.GetString( "Nombre" );
-                results.LastName    = infoBrand.GetString( "Apellidos" );
-                results.RFC         = infoBrand.GetString( "RFC" );
-                results.Address     = infoBrand.GetString( "Direccion" );
-                results.Email       = infoBrand.GetString( "Correo" );
-                results.PhoneNumber = infoBrand.GetString( "Telefono" );
+            while( infoProvider.Read() ) {
+                results.Id          = infoProvider.GetGuid( "Id" );
+                results.Name        = infoProvider.GetString( "Nombre" );
+                results.LastName    = infoProvider.GetString( "Apellidos" );
+                results.RFC         = infoProvider.GetString( "RFC" );
+                results.Address     = infoProvider.GetString( "Direccion" );
+                results.Email       = infoProvider.GetString( "Correo" );
+                results.PhoneNumber = infoProvider.GetString( "Telefono" );
             }
 
             connection.Close();
@@ -62,7 +62,7 @@ public class AdminProvider {
         return results;
     }
 
-     public async Task<Object> ReadProvider() {
+     public async Task<Object> GetProviders() {
         List<Object> results          = new List<Object>();
         SingleResponse messageWarning = new SingleResponse();
 
@@ -92,17 +92,17 @@ public class AdminProvider {
 
             commandStoredProcedure.Parameters.Add( message );
 
-            var infoUnitMeasurement = await commandStoredProcedure.ExecuteReaderAsync();
+            var infoProvider = await commandStoredProcedure.ExecuteReaderAsync();
 
-            while( infoUnitMeasurement.Read() ) {
+            while( infoProvider.Read() ) {
                 var FormatResult = new { 
-                    Id          = infoUnitMeasurement.GetGuid( "Id" ),
-                    Name        = infoUnitMeasurement.GetString( "Nombre" ),
-                    LastName    = infoUnitMeasurement.GetString( "Apellidos" ),
-                    RFC         = infoUnitMeasurement.GetString( "RFC" ),
-                    Address     = infoUnitMeasurement.GetString( "Direccion" ),
-                    Email       = infoUnitMeasurement.GetString( "Correo" ),
-                    PhoneNumber = infoUnitMeasurement.GetString( "Telefono" )
+                    Id          = infoProvider.GetGuid( "Id" ),
+                    Name        = infoProvider.GetString( "Nombre" ),
+                    LastName    = infoProvider.GetString( "Apellidos" ),
+                    RFC         = infoProvider.GetString( "RFC" ),
+                    Address     = infoProvider.GetString( "Direccion" ),
+                    Email       = infoProvider.GetString( "Correo" ),
+                    PhoneNumber = infoProvider.GetString( "Telefono" )
                 };
 
                 results.Add( FormatResult );
@@ -125,5 +125,62 @@ public class AdminProvider {
         }
 
         return FormatResponse;
+    }
+
+    public async Task<ProviderResponse> UpdateProvider( Guid id, ProviderRequest ProviderRequest ) {
+        ProviderResponse results = new ProviderResponse();
+        ProviderRequest.Id       = id;
+
+        using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
+            connection.Open();
+
+            var commandStoredProcedure = new SqlCommand {
+                Connection  = connection,
+                CommandText = "[dbo].[AdministracionProveedores]",
+                CommandType = CommandType.StoredProcedure
+            };
+
+            commandStoredProcedure.Parameters.AddWithValue( "@Id", ProviderRequest.Id );
+            commandStoredProcedure.Parameters.AddWithValue( "@Nombre", ProviderRequest.Name );
+            commandStoredProcedure.Parameters.AddWithValue( "@Apellidos", ProviderRequest.LastName );
+            commandStoredProcedure.Parameters.AddWithValue( "@RFC", ProviderRequest.RFC );
+            commandStoredProcedure.Parameters.AddWithValue( "@Direccion", ProviderRequest.Address );
+            commandStoredProcedure.Parameters.AddWithValue( "@Correo", ProviderRequest.Email );
+            commandStoredProcedure.Parameters.AddWithValue( "@Telefono", ProviderRequest.PhoneNumber );
+            commandStoredProcedure.Parameters.AddWithValue( "@Opcion", "Actualizar" );
+
+            SqlParameter successStatus  = new SqlParameter();
+            successStatus.ParameterName = "@Exito";
+            successStatus.SqlDbType     = SqlDbType.Bit;
+            successStatus.Direction     = ParameterDirection.Output;
+
+            commandStoredProcedure.Parameters.Add( successStatus );
+
+            SqlParameter message  = new SqlParameter();
+            message.ParameterName = "@Mensaje";
+            message.SqlDbType     = SqlDbType.VarChar;
+            message.Direction     = ParameterDirection.Output;
+            message.Size          = 4000;
+
+            commandStoredProcedure.Parameters.Add( message );
+
+            var infoProvider = await commandStoredProcedure.ExecuteReaderAsync();
+
+            while( infoProvider.Read() ) {
+                results.Id          = infoProvider.GetGuid( "Id" );
+                results.Name        = infoProvider.GetString( "Nombre" );
+                results.LastName    = infoProvider.GetString( "Apellidos" );
+                results.RFC         = infoProvider.GetString( "RFC" );
+                results.Address     = infoProvider.GetString( "Direccion" );
+                results.Email       = infoProvider.GetString( "Correo" );
+                results.PhoneNumber = infoProvider.GetString( "Telefono" );
+            }
+
+            connection.Close();
+            results.Status  = ( bool ) successStatus.Value;
+            results.Message = ( string ) message.Value; 
+        }
+
+        return results;
     }
 }

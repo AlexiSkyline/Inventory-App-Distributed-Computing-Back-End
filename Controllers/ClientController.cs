@@ -19,7 +19,7 @@ public class ClientController : ControllerBase {
 
         [HttpGet( "" )]
         public async Task<IActionResult> GetClients() {
-            var request = await BLLClient.ReadSeller();
+            var request = await BLLClient.GetClients();
             return Ok( request );
         }
 

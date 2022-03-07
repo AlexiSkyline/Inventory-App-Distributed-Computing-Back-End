@@ -19,7 +19,7 @@ public class BrandController : ControllerBase {
 
         [HttpGet( "" )]
         public async Task<IActionResult> GetBrands() {
-            var request = await BLLBrand.ReadBrands();
+            var request = await BLLBrand.GetBrands();
             return Ok( request );
         }
 

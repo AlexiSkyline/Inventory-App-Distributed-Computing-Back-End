@@ -42,16 +42,16 @@ public class AdminClient {
 
             commandStoredProcedure.Parameters.Add( message );
 
-            var infoBrand = await commandStoredProcedure.ExecuteReaderAsync();
+            var infoClient = await commandStoredProcedure.ExecuteReaderAsync();
 
-            while( infoBrand.Read() ) {
-                results.Id          = infoBrand.GetGuid( "Id" );
-                results.Name        = infoBrand.GetString( "Nombre" );
-                results.LastName    = infoBrand.GetString( "Apellidos" );
-                results.RFC         = infoBrand.GetString( "RFC" );
-                results.Address     = infoBrand.GetString( "Direccion" );
-                results.Email       = infoBrand.GetString( "Correo" );
-                results.PhoneNumber = infoBrand.GetString( "Telefono" );
+            while( infoClient.Read() ) {
+                results.Id          = infoClient.GetGuid( "Id" );
+                results.Name        = infoClient.GetString( "Nombre" );
+                results.LastName    = infoClient.GetString( "Apellidos" );
+                results.RFC         = infoClient.GetString( "RFC" );
+                results.Address     = infoClient.GetString( "Direccion" );
+                results.Email       = infoClient.GetString( "Correo" );
+                results.PhoneNumber = infoClient.GetString( "Telefono" );
             }
 
             connection.Close();
@@ -62,7 +62,7 @@ public class AdminClient {
         return results;
     }
 
-    public async Task<Object> ReadSeller() {
+    public async Task<Object> GetClients() {
         List<Object> results          = new List<Object>();
         SingleResponse messageWarning = new SingleResponse();
 
@@ -92,17 +92,17 @@ public class AdminClient {
 
             commandStoredProcedure.Parameters.Add( message );
 
-            var infoUnitMeasurement = await commandStoredProcedure.ExecuteReaderAsync();
+            var infoClient = await commandStoredProcedure.ExecuteReaderAsync();
 
-            while( infoUnitMeasurement.Read() ) {
+            while( infoClient.Read() ) {
                 var FormatResult = new { 
-                    Id          = infoUnitMeasurement.GetGuid( "Id" ),
-                    Name        = infoUnitMeasurement.GetString( "Nombre" ),
-                    LastName    = infoUnitMeasurement.GetString( "Apellidos" ),
-                    RFC         = infoUnitMeasurement.GetString( "RFC" ),
-                    Address     = infoUnitMeasurement.GetString( "Direccion" ),
-                    Email       = infoUnitMeasurement.GetString( "Correo" ),
-                    PhoneNumber = infoUnitMeasurement.GetString( "Telefono" )
+                    Id          = infoClient.GetGuid( "Id" ),
+                    Name        = infoClient.GetString( "Nombre" ),
+                    LastName    = infoClient.GetString( "Apellidos" ),
+                    RFC         = infoClient.GetString( "RFC" ),
+                    Address     = infoClient.GetString( "Direccion" ),
+                    Email       = infoClient.GetString( "Correo" ),
+                    PhoneNumber = infoClient.GetString( "Telefono" )
                 };
 
                 results.Add( FormatResult );
@@ -164,16 +164,16 @@ public class AdminClient {
 
             commandStoredProcedure.Parameters.Add( message );
 
-            var infoBrand = await commandStoredProcedure.ExecuteReaderAsync();
+            var infoClient = await commandStoredProcedure.ExecuteReaderAsync();
 
-            while( infoBrand.Read() ) {
-                results.Id          = infoBrand.GetGuid( "Id" );
-                results.Name        = infoBrand.GetString( "Nombre" );
-                results.LastName    = infoBrand.GetString( "Apellidos" );
-                results.RFC         = infoBrand.GetString( "RFC" );
-                results.Address     = infoBrand.GetString( "Direccion" );
-                results.Email       = infoBrand.GetString( "Correo" );
-                results.PhoneNumber = infoBrand.GetString( "Telefono" );
+            while( infoClient.Read() ) {
+                results.Id          = infoClient.GetGuid( "Id" );
+                results.Name        = infoClient.GetString( "Nombre" );
+                results.LastName    = infoClient.GetString( "Apellidos" );
+                results.RFC         = infoClient.GetString( "RFC" );
+                results.Address     = infoClient.GetString( "Direccion" );
+                results.Email       = infoClient.GetString( "Correo" );
+                results.PhoneNumber = infoClient.GetString( "Telefono" );
             }
 
             connection.Close();
@@ -216,16 +216,16 @@ public class AdminClient {
 
             commandStoredProcedure.Parameters.Add( message );
 
-            var infoBrand = await commandStoredProcedure.ExecuteReaderAsync();
+            var infoClient = await commandStoredProcedure.ExecuteReaderAsync();
 
-            while( infoBrand.Read() ) {
-                results.Id          = infoBrand.GetGuid( "Id" );
-                results.Name        = infoBrand.GetString( "Nombre" );
-                results.LastName    = infoBrand.GetString( "Apellidos" );
-                results.RFC         = infoBrand.GetString( "RFC" );
-                results.Address     = infoBrand.GetString( "Direccion" );
-                results.Email       = infoBrand.GetString( "Correo" );
-                results.PhoneNumber = infoBrand.GetString( "Telefono" );
+            while( infoClient.Read() ) {
+                results.Id          = infoClient.GetGuid( "Id" );
+                results.Name        = infoClient.GetString( "Nombre" );
+                results.LastName    = infoClient.GetString( "Apellidos" );
+                results.RFC         = infoClient.GetString( "RFC" );
+                results.Address     = infoClient.GetString( "Direccion" );
+                results.Email       = infoClient.GetString( "Correo" );
+                results.PhoneNumber = infoClient.GetString( "Telefono" );
             }
 
             connection.Close();

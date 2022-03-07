@@ -18,8 +18,8 @@ public class UnitMeasurementController : ControllerBase {
         }
 
         [HttpGet( "" )]
-        public async Task<IActionResult> ReadUnitMeasurement() {
-            var request = await BLLUnitMeasurement.ReadUnitMeasurement();
+        public async Task<IActionResult> GetUnitMeasurements() {
+            var request = await BLLUnitMeasurement.GetUnitMeasurements();
             return Ok( request );
         }
 

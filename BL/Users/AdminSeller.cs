@@ -43,17 +43,17 @@ public class AdminSeller {
 
             commandStoredProcedure.Parameters.Add( message );
 
-            var infoBrand = await commandStoredProcedure.ExecuteReaderAsync();
+            var infoSeller = await commandStoredProcedure.ExecuteReaderAsync();
 
-            while( infoBrand.Read() ) {
-                results.Id          = infoBrand.GetGuid( "Id" );
-                results.Name        = infoBrand.GetString( "Nombre" );
-                results.LastName    = infoBrand.GetString( "Apellidos" );
-                results.RFC         = infoBrand.GetString( "RFC" );
-                results.Address     = infoBrand.GetString( "Direccion" );
-                results.Email       = infoBrand.GetString( "Correo" );
-                results.PhoneNumber = infoBrand.GetString( "Telefono" );
-                results.UserName    = infoBrand.GetString( "UserName" );
+            while( infoSeller.Read() ) {
+                results.Id          = infoSeller.GetGuid( "Id" );
+                results.Name        = infoSeller.GetString( "Nombre" );
+                results.LastName    = infoSeller.GetString( "Apellidos" );
+                results.RFC         = infoSeller.GetString( "RFC" );
+                results.Address     = infoSeller.GetString( "Direccion" );
+                results.Email       = infoSeller.GetString( "Correo" );
+                results.PhoneNumber = infoSeller.GetString( "Telefono" );
+                results.UserName    = infoSeller.GetString( "UserName" );
             }
 
             connection.Close();
@@ -64,7 +64,7 @@ public class AdminSeller {
         return results;
     }
 
-    public async Task<Object> ReadSeller() {
+    public async Task<Object> GetSellers() {
         List<Object> results          = new List<Object>();
         SingleResponse messageWarning = new SingleResponse();
 
@@ -94,18 +94,18 @@ public class AdminSeller {
 
             commandStoredProcedure.Parameters.Add( message );
 
-            var infoUnitMeasurement = await commandStoredProcedure.ExecuteReaderAsync();
+            var infoSeller = await commandStoredProcedure.ExecuteReaderAsync();
 
-            while( infoUnitMeasurement.Read() ) {
+            while( infoSeller.Read() ) {
                 var FormatResult = new { 
-                    Id          = infoUnitMeasurement.GetGuid( "Id" ),
-                    Name        = infoUnitMeasurement.GetString( "Nombre" ),
-                    LastName    = infoUnitMeasurement.GetString( "Apellidos" ),
-                    RFC         = infoUnitMeasurement.GetString( "RFC" ),
-                    Address     = infoUnitMeasurement.GetString( "Direccion" ),
-                    Email       = infoUnitMeasurement.GetString( "Correo" ),
-                    PhoneNumber = infoUnitMeasurement.GetString( "Telefono" ),
-                    UserName    = infoUnitMeasurement.GetString( "UserName" ),
+                    Id          = infoSeller.GetGuid( "Id" ),
+                    Name        = infoSeller.GetString( "Nombre" ),
+                    LastName    = infoSeller.GetString( "Apellidos" ),
+                    RFC         = infoSeller.GetString( "RFC" ),
+                    Address     = infoSeller.GetString( "Direccion" ),
+                    Email       = infoSeller.GetString( "Correo" ),
+                    PhoneNumber = infoSeller.GetString( "Telefono" ),
+                    UserName    = infoSeller.GetString( "UserName" ),
                 };
 
                 results.Add( FormatResult );
@@ -169,17 +169,17 @@ public class AdminSeller {
 
             commandStoredProcedure.Parameters.Add( message );
 
-            var infoBrand = await commandStoredProcedure.ExecuteReaderAsync();
+            var infoSeller = await commandStoredProcedure.ExecuteReaderAsync();
 
-            while( infoBrand.Read() ) {
-                results.Id          = infoBrand.GetGuid( "Id" );
-                results.Name        = infoBrand.GetString( "Nombre" );
-                results.LastName    = infoBrand.GetString( "Apellidos" );
-                results.RFC         = infoBrand.GetString( "RFC" );
-                results.Address     = infoBrand.GetString( "Direccion" );
-                results.Email       = infoBrand.GetString( "Correo" );
-                results.PhoneNumber = infoBrand.GetString( "Telefono" );
-                results.UserName    = infoBrand.GetString( "UserName" );
+            while( infoSeller.Read() ) {
+                results.Id          = infoSeller.GetGuid( "Id" );
+                results.Name        = infoSeller.GetString( "Nombre" );
+                results.LastName    = infoSeller.GetString( "Apellidos" );
+                results.RFC         = infoSeller.GetString( "RFC" );
+                results.Address     = infoSeller.GetString( "Direccion" );
+                results.Email       = infoSeller.GetString( "Correo" );
+                results.PhoneNumber = infoSeller.GetString( "Telefono" );
+                results.UserName    = infoSeller.GetString( "UserName" );
             }
 
             connection.Close();
@@ -222,17 +222,17 @@ public class AdminSeller {
 
             commandStoredProcedure.Parameters.Add( message );
 
-            var infoBrand = await commandStoredProcedure.ExecuteReaderAsync();
+            var infoSeller = await commandStoredProcedure.ExecuteReaderAsync();
 
-            while( infoBrand.Read() ) {
-                results.Id          = infoBrand.GetGuid( "Id" );
-                results.Name        = infoBrand.GetString( "Nombre" );
-                results.LastName    = infoBrand.GetString( "Apellidos" );
-                results.RFC         = infoBrand.GetString( "RFC" );
-                results.Address     = infoBrand.GetString( "Direccion" );
-                results.Email       = infoBrand.GetString( "Correo" );
-                results.PhoneNumber = infoBrand.GetString( "Telefono" );
-                results.UserName    = infoBrand.GetString( "UserName" );
+            while( infoSeller.Read() ) {
+                results.Id          = infoSeller.GetGuid( "Id" );
+                results.Name        = infoSeller.GetString( "Nombre" );
+                results.LastName    = infoSeller.GetString( "Apellidos" );
+                results.RFC         = infoSeller.GetString( "RFC" );
+                results.Address     = infoSeller.GetString( "Direccion" );
+                results.Email       = infoSeller.GetString( "Correo" );
+                results.PhoneNumber = infoSeller.GetString( "Telefono" );
+                results.UserName    = infoSeller.GetString( "UserName" );
             }
 
             connection.Close();

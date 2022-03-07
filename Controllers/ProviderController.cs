@@ -19,8 +19,20 @@ public class ProviderController : ControllerBase {
 
         [HttpGet( "" )]
         public async Task<IActionResult> GetProviders() {
-            var request = await BLLProvider.ReadProvider();
+            var request = await BLLProvider.GetProviders();
             return Ok( request );
+        }
+
+        [HttpPut( "{id}" )]
+        public async Task<IActionResult> UpdateProvider( Guid id, ProviderRequest ProviderRequest ) {
+            var request = await BLLProvider.UpdateProvider( id, ProviderRequest );
+
+            if( request.Status == false ) {
+                var message = new { request.Message, status = 401 };
+                return Unauthorized( message );
+            }
+
+            return Created( "", request );
         }
     #endregion
 }

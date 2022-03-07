@@ -52,7 +52,7 @@ public class AdminUnitMeasurement {
         return results;
     }
 
-    public async Task<Object> ReadUnitMeasurement() {
+    public async Task<Object> GetUnitMeasurements() {
         List<Object> results          = new List<Object>();
         SingleResponse messageWarning = new SingleResponse();
 
@@ -142,11 +142,11 @@ public class AdminUnitMeasurement {
 
             commandStoredProcedure.Parameters.Add( message );
 
-            var infoBrand = await commandStoredProcedure.ExecuteReaderAsync();
+            var infoUnitMeasurement = await commandStoredProcedure.ExecuteReaderAsync();
 
-            while( infoBrand.Read() ) {
-                results.Id          = infoBrand.GetGuid( "Id" );
-                results.Description = infoBrand.GetString( "Descripcion" );
+            while( infoUnitMeasurement.Read() ) {
+                results.Id          = infoUnitMeasurement.GetGuid( "Id" );
+                results.Description = infoUnitMeasurement.GetString( "Descripcion" );
             }
 
             connection.Close();

@@ -18,8 +18,8 @@ public class SellerController : ControllerBase {
         }
 
         [HttpGet( "" )]
-        public async Task<IActionResult> GetSeller() {
-            var request = await BLLSeller.ReadSeller();
+        public async Task<IActionResult> GetSellers() {
+            var request = await BLLSeller.GetSellers();
             return Ok( request );
         }
 
