@@ -34,5 +34,17 @@ public class ProviderController : ControllerBase {
 
             return Created( "", request );
         }
+
+        [HttpDelete( "{id}" )]
+        public async Task<ActionResult<ProviderRequest>> DeleteProvider( Guid id ) {
+            var request = await BLLProvider.DeleteProvider( id );
+
+            if( request.Status == false ) {
+                var message = new { request.Message, status = 401 };
+                return Unauthorized( message );
+            }
+
+            return Ok( request );
+        }
     #endregion
 }

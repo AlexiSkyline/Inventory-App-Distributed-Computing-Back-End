@@ -183,4 +183,56 @@ public class AdminProvider {
 
         return results;
     }
+
+    public async Task<ProviderResponse> DeleteProvider( Guid IdUnit ) {
+        ProviderResponse results      = new ProviderResponse();
+        ProviderRequest ProviderRequest = new ProviderRequest();
+        ProviderRequest.Id            = IdUnit;
+
+        using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
+            connection.Open();
+
+            var commandStoredProcedure = new SqlCommand {
+                Connection  = connection,
+                CommandText = "[dbo].[AdministracionProveedores]",
+                CommandType = CommandType.StoredProcedure
+            };
+
+            commandStoredProcedure.Parameters.AddWithValue( "@Id", ProviderRequest.Id );
+            commandStoredProcedure.Parameters.AddWithValue( "@Opcion", "Eliminar" );
+
+            SqlParameter successStatus  = new SqlParameter();
+            successStatus.ParameterName = "@Exito";
+            successStatus.SqlDbType     = SqlDbType.Bit;
+            successStatus.Direction     = ParameterDirection.Output;
+
+            commandStoredProcedure.Parameters.Add( successStatus );
+
+            SqlParameter message  = new SqlParameter();
+            message.ParameterName = "@Mensaje";
+            message.SqlDbType     = SqlDbType.VarChar;
+            message.Direction     = ParameterDirection.Output;
+            message.Size          = 4000;
+
+            commandStoredProcedure.Parameters.Add( message );
+
+            var infoClient = await commandStoredProcedure.ExecuteReaderAsync();
+
+            while( infoClient.Read() ) {
+                results.Id          = infoClient.GetGuid( "Id" );
+                results.Name        = infoClient.GetString( "Nombre" );
+                results.LastName    = infoClient.GetString( "Apellidos" );
+                results.RFC         = infoClient.GetString( "RFC" );
+                results.Address     = infoClient.GetString( "Direccion" );
+                results.Email       = infoClient.GetString( "Correo" );
+                results.PhoneNumber = infoClient.GetString( "Telefono" );
+            }
+
+            connection.Close();
+            results.Status  = ( bool ) successStatus.Value;
+            results.Message = ( string ) message.Value; 
+        }
+        
+        return results;
+    }
 }
