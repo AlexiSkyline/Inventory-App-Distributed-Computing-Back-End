@@ -172,7 +172,7 @@ public class AdminSeller {
             var infoBrand = await commandStoredProcedure.ExecuteReaderAsync();
 
             while( infoBrand.Read() ) {
-                results.Id          = infoBrand.GetGuid( "Nombre" );
+                results.Id          = infoBrand.GetGuid( "Id" );
                 results.Name        = infoBrand.GetString( "Nombre" );
                 results.LastName    = infoBrand.GetString( "Apellidos" );
                 results.RFC         = infoBrand.GetString( "RFC" );

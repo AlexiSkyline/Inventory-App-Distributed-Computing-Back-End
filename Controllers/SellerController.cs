@@ -10,7 +10,7 @@ public class SellerController : ControllerBase {
         AdminSeller BLLSeller = new AdminSeller();
     #endregion
 
-    #region  "Methods"
+    #region "Methods"
         [HttpPost( "" )]
         public async Task<IActionResult> CreateSeller( SellerRequest sellerRequest ) {
             var request = await BLLSeller.CreateSeller( sellerRequest );

@@ -10,7 +10,7 @@ public class AuthController : ControllerBase {
         Login login = new Login();
     #endregion
 
-    #region  "Methods"
+    #region "Methods"
         [HttpPost( "Login" )]
         public async Task<IActionResult> Login( LoginRequest loginModel ) {
             var request = await login.LoginSeller( loginModel );
