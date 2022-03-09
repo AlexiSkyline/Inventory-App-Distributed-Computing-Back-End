@@ -86,7 +86,7 @@ public class AdminUnitMeasurement {
 
             while( infoUnitMeasurement.Read() ) {
                 var FormatResult = new { 
-                    Id = infoUnitMeasurement.GetGuid( "Id" ), 
+                    Id          = infoUnitMeasurement.GetGuid( "Id" ), 
                     Description = infoUnitMeasurement.GetString( "Descripcion" ) 
                 };
 
@@ -241,7 +241,7 @@ public class AdminUnitMeasurement {
 
             while( infoUnitMeasurement.Read() ) {
                 var FormatResult = new { 
-                    Id = infoUnitMeasurement.GetGuid( "Id" ), 
+                    Id          = infoUnitMeasurement.GetGuid( "Id" ), 
                     Description = infoUnitMeasurement.GetString( "Descripcion" ) 
                 };
 

@@ -86,7 +86,7 @@ public class AdminBrand {
 
             while( infoBrand.Read() ) {
                 var FormatResult = new { 
-                    Id = infoBrand.GetGuid( "Id" ), 
+                    Id          = infoBrand.GetGuid( "Id" ), 
                     Description = infoBrand.GetString( "Descripcion" ) 
                 };
 
@@ -241,7 +241,7 @@ public class AdminBrand {
 
             while( infoBrand.Read() ) {
                 var FormatResult = new { 
-                    Id = infoBrand.GetGuid( "Id" ), 
+                    Id          = infoBrand.GetGuid( "Id" ), 
                     Description = infoBrand.GetString( "Descripcion" ) 
                 };
 
