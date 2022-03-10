@@ -46,5 +46,11 @@ public class ClientController : ControllerBase {
 
             return Ok( request );
         }
+
+        [HttpGet( "{name}" )]
+        public async Task<IActionResult> FilterClients( string name ) {
+            var request = await BLLClient.FilterClients( name );        
+            return Ok( request );
+        }
     #endregion
 }

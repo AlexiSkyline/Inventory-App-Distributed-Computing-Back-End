@@ -235,4 +235,66 @@ public class AdminClient {
         
         return results;
     }
+
+    public async Task<Object> FilterClients( string Name ) {
+        List<Object> results          = new List<Object>();
+        SingleResponse messageWarning = new SingleResponse();
+        ClientRequest ClientRequest   = new ClientRequest();
+        ClientRequest.Name            = Name;
+        
+        using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
+            connection.Open();
+
+            var commandStoredProcedure = new SqlCommand {
+                Connection  = connection,
+                CommandText = "[dbo].[AdministracionClientes]",
+                CommandType = CommandType.StoredProcedure
+            };
+            
+            commandStoredProcedure.Parameters.AddWithValue( "@Nombre", ClientRequest.Name );
+            commandStoredProcedure.Parameters.AddWithValue( "@Opcion", "ListaFiltrada" );
+
+            SqlParameter successStatus  = new SqlParameter();
+            successStatus.ParameterName = "@Exito";
+            successStatus.SqlDbType     = SqlDbType.Bit;
+            successStatus.Direction     = ParameterDirection.Output;
+
+            commandStoredProcedure.Parameters.Add( successStatus );
+
+            SqlParameter message  = new SqlParameter();
+            message.ParameterName = "@Mensaje";
+            message.SqlDbType     = SqlDbType.VarChar;
+            message.Direction     = ParameterDirection.Output;
+            message.Size          = 4000;
+
+            commandStoredProcedure.Parameters.Add( message );
+
+            var infoClient = await commandStoredProcedure.ExecuteReaderAsync();
+
+            while( infoClient.Read() ) {
+                var FormatResult = new { 
+                    Id          = infoClient.GetGuid( "Id" ),
+                    Name        = infoClient.GetString( "Nombre" ),
+                    LastName    = infoClient.GetString( "Apellidos" ),
+                    RFC         = infoClient.GetString( "RFC" ),
+                    Address     = infoClient.GetString( "Direccion" ),
+                    Email       = infoClient.GetString( "Correo" ),
+                    PhoneNumber = infoClient.GetString( "Telefono" ) 
+                };
+
+                results.Add( FormatResult );
+            }
+
+            connection.Close();
+            messageWarning.Status  = ( bool ) successStatus.Value;
+            messageWarning.Message = ( string ) message.Value; 
+        }
+
+        FormatResponse formatResponse = new FormatResponse();
+        formatResponse.Results = results;
+        formatResponse.Message = messageWarning.Message;
+        formatResponse.Status  = messageWarning.Status;
+
+        return formatResponse;
+    }
 }
