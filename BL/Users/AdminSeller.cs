@@ -242,4 +242,67 @@ public class AdminSeller {
         
         return results;
     }
+
+    public async Task<Object> FilterSellers( string Name ) {
+        List<Object> results          = new List<Object>();
+        SingleResponse messageWarning = new SingleResponse();
+        SellerRequest SellerRequest   = new SellerRequest();
+        SellerRequest.Name            = Name;
+        
+        using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
+            connection.Open();
+
+            var commandStoredProcedure = new SqlCommand {
+                Connection  = connection,
+                CommandText = "[dbo].[AdministracionVendedores]",
+                CommandType = CommandType.StoredProcedure
+            };
+            
+            commandStoredProcedure.Parameters.AddWithValue( "@Nombre", SellerRequest.Name );
+            commandStoredProcedure.Parameters.AddWithValue( "@Opcion", "ListaFiltrada" );
+
+            SqlParameter successStatus  = new SqlParameter();
+            successStatus.ParameterName = "@Exito";
+            successStatus.SqlDbType     = SqlDbType.Bit;
+            successStatus.Direction     = ParameterDirection.Output;
+
+            commandStoredProcedure.Parameters.Add( successStatus );
+
+            SqlParameter message  = new SqlParameter();
+            message.ParameterName = "@Mensaje";
+            message.SqlDbType     = SqlDbType.VarChar;
+            message.Direction     = ParameterDirection.Output;
+            message.Size          = 4000;
+
+            commandStoredProcedure.Parameters.Add( message );
+
+            var infoSeller = await commandStoredProcedure.ExecuteReaderAsync();
+
+            while( infoSeller.Read() ) {
+                var FormatResult = new { 
+                    Id          = infoSeller.GetGuid( "Id" ),
+                    Name        = infoSeller.GetString( "Nombre" ),
+                    LastName    = infoSeller.GetString( "Apellidos" ),
+                    RFC         = infoSeller.GetString( "RFC" ),
+                    Address     = infoSeller.GetString( "Direccion" ),
+                    Email       = infoSeller.GetString( "Correo" ),
+                    PhoneNumber = infoSeller.GetString( "Telefono" ),
+                    UserName    = infoSeller.GetString( "UserName" )
+                };
+
+                results.Add( FormatResult );
+            }
+
+            connection.Close();
+            messageWarning.Status  = ( bool ) successStatus.Value;
+            messageWarning.Message = ( string ) message.Value; 
+        }
+
+        FormatResponse formatResponse = new FormatResponse();
+        formatResponse.Results = results;
+        formatResponse.Message = messageWarning.Message;
+        formatResponse.Status  = messageWarning.Status;
+
+        return formatResponse;
+    }
 }

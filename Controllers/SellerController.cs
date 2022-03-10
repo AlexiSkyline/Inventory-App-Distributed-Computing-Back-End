@@ -46,5 +46,11 @@ public class SellerController : ControllerBase {
 
             return Ok( request );
         }
+
+        [HttpGet( "{name}" )]
+        public async Task<IActionResult> FilterSellers( string name ) {
+            var request = await BLLSeller.FilterSellers( name );        
+            return Ok( request );
+        }
     #endregion
 }
