@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Unach.Inventory.API.Model.Request;
 
-public class CompanyRequest {
+public class BusinessRequest {
     public Guid? Id { get; set; }
 
     [StringLength(50)]
