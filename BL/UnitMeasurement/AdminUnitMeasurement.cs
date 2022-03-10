@@ -258,6 +258,6 @@ public class AdminUnitMeasurement {
         FormatResponse.Message = messageWarning.Message;
         FormatResponse.Status  = messageWarning.Status;
 
-        return ( results.Capacity != 0 ) ? FormatResponse : messageWarning;
+        return FormatResponse;
     }
 }

@@ -209,4 +209,62 @@ public class AdminBusiness {
 
         return results;
     }
+
+    public async Task<Object> FilterBusiness( string nameBussines ) {
+        List<Object> results            = new List<Object>();
+        SingleResponse messageWarning   = new SingleResponse();
+        BusinessRequest BusinessRequest = new BusinessRequest();
+        BusinessRequest.Name            = nameBussines;
+        
+        using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
+            connection.Open();
+
+            var commandStoredProcedure = new SqlCommand {
+                Connection  = connection,
+                CommandText = "[dbo].[AdministracionEmpresas]",
+                CommandType = CommandType.StoredProcedure
+            };
+            
+            commandStoredProcedure.Parameters.AddWithValue( "@Nombre", BusinessRequest.Name );
+            commandStoredProcedure.Parameters.AddWithValue( "@Opcion", "ListaFiltrada" );
+
+            SqlParameter successStatus  = new SqlParameter();
+            successStatus.ParameterName = "@Exito";
+            successStatus.SqlDbType     = SqlDbType.Bit;
+            successStatus.Direction     = ParameterDirection.Output;
+
+            commandStoredProcedure.Parameters.Add( successStatus );
+
+            SqlParameter message  = new SqlParameter();
+            message.ParameterName = "@Mensaje";
+            message.SqlDbType     = SqlDbType.VarChar;
+            message.Direction     = ParameterDirection.Output;
+            message.Size          = 4000;
+
+            commandStoredProcedure.Parameters.Add( message );
+
+            var infoCompany = await commandStoredProcedure.ExecuteReaderAsync();
+
+            while( infoCompany.Read() ) {
+                var FormatResult = new { 
+                    Id      = infoCompany.GetGuid( "Id" ),
+                    Name    = infoCompany.GetString( "Nombre" ),
+                    Address = infoCompany.GetString( "Direccion" )
+                };
+
+                results.Add( FormatResult );
+            }
+
+            connection.Close();
+            messageWarning.Status  = ( bool ) successStatus.Value;
+            messageWarning.Message = ( string ) message.Value; 
+        }
+
+        FormatResponse formatResponse = new FormatResponse();
+        formatResponse.Results = results;
+        formatResponse.Message = messageWarning.Message;
+        formatResponse.Status  = messageWarning.Status;
+
+        return formatResponse;
+    }
 }

@@ -47,5 +47,11 @@ public class BusinessController : ControllerBase {
 
             return Ok( request );
         }
+
+        [HttpGet( "{name}" )]
+        public async Task<IActionResult> FilterBusiness( string name ) {
+            var request = await BLLAdminBusiness.FilterBusiness( name );        
+            return Ok( request );
+        }
     #endregion
 }

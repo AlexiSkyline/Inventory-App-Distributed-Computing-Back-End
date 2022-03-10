@@ -258,6 +258,6 @@ public class AdminBrand {
         formatResponse.Message = messageWarning.Message;
         formatResponse.Status  = messageWarning.Status;
 
-        return ( results.Capacity != 0 ) ? formatResponse : messageWarning;
+        return formatResponse;
     }
 }
