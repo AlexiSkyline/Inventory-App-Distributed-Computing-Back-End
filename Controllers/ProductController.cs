@@ -19,8 +19,14 @@ public class ProductController : ControllerBase {
                 var message = new { request.Message, status = 401 };
                 return Unauthorized( message );
             }
-            
+
             return Created( "", request );
+        }
+
+        [HttpGet( "" )]
+        public async Task<IActionResult> GetProducts() {
+            var request = await BLLProduct.GetProducts();
+            return Ok( request );
         }
     #endregion
 }
