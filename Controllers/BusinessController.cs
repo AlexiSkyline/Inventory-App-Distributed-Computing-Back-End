@@ -35,5 +35,17 @@ public class BusinessController : ControllerBase {
 
             return Created( "", request );
         }
+
+        [HttpDelete( "{id}" )]
+        public async Task<ActionResult<BusinessRequest>> DeleteBusiness( Guid id ) {
+            var request = await BLLAdminBusiness.DeleteBusiness( id );
+
+            if( request.Status == false ) {
+                var message = new { request.Message, status = 401 };
+                return Unauthorized( message );
+            }
+
+            return Ok( request );
+        }
     #endregion
 }
