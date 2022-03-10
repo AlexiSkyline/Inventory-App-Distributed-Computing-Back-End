@@ -46,5 +46,11 @@ public class ProviderController : ControllerBase {
 
             return Ok( request );
         }
+
+        [HttpGet( "{name}" )]
+        public async Task<IActionResult> FilterProviders( string name ) {
+            var request = await BLLProvider.FilterProviders( name );        
+            return Ok( request );
+        }
     #endregion
 }

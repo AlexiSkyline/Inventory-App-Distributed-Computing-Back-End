@@ -216,16 +216,16 @@ public class AdminProvider {
 
             commandStoredProcedure.Parameters.Add( message );
 
-            var infoClient = await commandStoredProcedure.ExecuteReaderAsync();
+            var infoProvider = await commandStoredProcedure.ExecuteReaderAsync();
 
-            while( infoClient.Read() ) {
-                results.Id          = infoClient.GetGuid( "Id" );
-                results.Name        = infoClient.GetString( "Nombre" );
-                results.LastName    = infoClient.GetString( "Apellidos" );
-                results.RFC         = infoClient.GetString( "RFC" );
-                results.Address     = infoClient.GetString( "Direccion" );
-                results.Email       = infoClient.GetString( "Correo" );
-                results.PhoneNumber = infoClient.GetString( "Telefono" );
+            while( infoProvider.Read() ) {
+                results.Id          = infoProvider.GetGuid( "Id" );
+                results.Name        = infoProvider.GetString( "Nombre" );
+                results.LastName    = infoProvider.GetString( "Apellidos" );
+                results.RFC         = infoProvider.GetString( "RFC" );
+                results.Address     = infoProvider.GetString( "Direccion" );
+                results.Email       = infoProvider.GetString( "Correo" );
+                results.PhoneNumber = infoProvider.GetString( "Telefono" );
             }
 
             connection.Close();
@@ -234,5 +234,67 @@ public class AdminProvider {
         }
         
         return results;
+    }
+
+    public async Task<Object> FilterProviders( string Name ) {
+        List<Object> results          = new List<Object>();
+        SingleResponse messageWarning = new SingleResponse();
+        ProviderRequest ProviderRequest   = new ProviderRequest();
+        ProviderRequest.Name            = Name;
+        
+        using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
+            connection.Open();
+
+            var commandStoredProcedure = new SqlCommand {
+                Connection  = connection,
+                CommandText = "[dbo].[AdministracionProveedores]",
+                CommandType = CommandType.StoredProcedure
+            };
+            
+            commandStoredProcedure.Parameters.AddWithValue( "@Nombre", ProviderRequest.Name );
+            commandStoredProcedure.Parameters.AddWithValue( "@Opcion", "ListaFiltrada" );
+
+            SqlParameter successStatus  = new SqlParameter();
+            successStatus.ParameterName = "@Exito";
+            successStatus.SqlDbType     = SqlDbType.Bit;
+            successStatus.Direction     = ParameterDirection.Output;
+
+            commandStoredProcedure.Parameters.Add( successStatus );
+
+            SqlParameter message  = new SqlParameter();
+            message.ParameterName = "@Mensaje";
+            message.SqlDbType     = SqlDbType.VarChar;
+            message.Direction     = ParameterDirection.Output;
+            message.Size          = 4000;
+
+            commandStoredProcedure.Parameters.Add( message );
+
+            var infoProvider = await commandStoredProcedure.ExecuteReaderAsync();
+
+            while( infoProvider.Read() ) {
+                var FormatResult = new { 
+                    Id          = infoProvider.GetGuid( "Id" ),
+                    Name        = infoProvider.GetString( "Nombre" ),
+                    LastName    = infoProvider.GetString( "Apellidos" ),
+                    RFC         = infoProvider.GetString( "RFC" ),
+                    Address     = infoProvider.GetString( "Direccion" ),
+                    Email       = infoProvider.GetString( "Correo" ),
+                    PhoneNumber = infoProvider.GetString( "Telefono" ) 
+                };
+
+                results.Add( FormatResult );
+            }
+
+            connection.Close();
+            messageWarning.Status  = ( bool ) successStatus.Value;
+            messageWarning.Message = ( string ) message.Value; 
+        }
+
+        FormatResponse formatResponse = new FormatResponse();
+        formatResponse.Results = results;
+        formatResponse.Message = messageWarning.Message;
+        formatResponse.Status  = messageWarning.Status;
+
+        return formatResponse;
     }
 }
