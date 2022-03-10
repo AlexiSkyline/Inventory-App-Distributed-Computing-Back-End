@@ -24,7 +24,7 @@ public class BrandController : ControllerBase {
         }
 
         [HttpPut( "{id}" )]
-        public async Task<IActionResult> UpdateUnitMeasurement( Guid id, BrandRequest BrandModel ) {
+        public async Task<IActionResult> UpdateBrand( Guid id, BrandRequest BrandModel ) {
             var request = await BLLBrand.UpdateBrand( id, BrandModel );
 
             if( request.Status == false ) {

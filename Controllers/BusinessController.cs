@@ -23,5 +23,17 @@ public class BusinessController : ControllerBase {
             var request = await BLLAdminBusiness.GetBusiness();
             return Ok( request );
         }
+
+        [HttpPut( "{id}" )]
+        public async Task<IActionResult> UpdateBusiness( Guid id, BusinessRequest BusinessModel ) {
+            var request = await BLLAdminBusiness.UpdateBusiness( id, BusinessModel );
+
+            if( request.Status == false ) {
+                var message = new { request.Message, status = 401 };
+                return Unauthorized( message );
+            }
+
+            return Created( "", request );
+        }
     #endregion
 }

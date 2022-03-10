@@ -112,4 +112,53 @@ public class AdminBusiness {
 
         return formatResponse;
     }
+
+    public async Task<BusinessResponse> UpdateBusiness( Guid IdBusiness, BusinessRequest BusinessRequest ) {
+        BusinessResponse results = new BusinessResponse();
+        BusinessRequest.Id       = IdBusiness;
+
+        using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
+            connection.Open();
+
+            var commandStoredProcedure = new SqlCommand {
+                Connection  = connection,
+                CommandText = "[dbo].[AdministracionEmpresas]",
+                CommandType = CommandType.StoredProcedure
+            };
+
+            commandStoredProcedure.Parameters.AddWithValue( "@Id", BusinessRequest.Id );
+            commandStoredProcedure.Parameters.AddWithValue( "@Nombre", BusinessRequest.Name );
+            commandStoredProcedure.Parameters.AddWithValue( "@Direccion", BusinessRequest.Address );
+            commandStoredProcedure.Parameters.AddWithValue( "@Opcion", "Actualizar" );
+
+            SqlParameter successStatus  = new SqlParameter();
+            successStatus.ParameterName = "@Exito";
+            successStatus.SqlDbType     = SqlDbType.Bit;
+            successStatus.Direction     = ParameterDirection.Output;
+
+            commandStoredProcedure.Parameters.Add( successStatus );
+
+            SqlParameter message  = new SqlParameter();
+            message.ParameterName = "@Mensaje";
+            message.SqlDbType     = SqlDbType.VarChar;
+            message.Direction     = ParameterDirection.Output;
+            message.Size          = 4000;
+
+            commandStoredProcedure.Parameters.Add( message );
+
+            var infoCompany = await commandStoredProcedure.ExecuteReaderAsync();
+
+            while( infoCompany.Read() ) {
+                results.Id      = infoCompany.GetGuid( "Id" );
+                results.Name    = infoCompany.GetString( "Nombre" );
+                results.Address = infoCompany.GetString( "Direccion" );
+            }
+
+            connection.Close();
+            results.Status  = ( bool ) successStatus.Value;
+            results.Message = ( string ) message.Value; 
+        }
+
+        return results;
+    }
 }
