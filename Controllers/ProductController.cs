@@ -40,5 +40,17 @@ public class ProductController : ControllerBase {
 
             return Created( "", request );
         }
+
+        [HttpDelete( "{id}" )]
+        public async Task<ActionResult<ProductRequest>> DeleteProduct( Guid id ) {
+            var request = await BLLProduct.DeleteProduct( id );
+
+            if( request.Status == false ) {
+                var message = new { request.Message, status = 401 };
+                return Unauthorized( message );
+            }
+
+            return Ok( request );
+        }
     #endregion
 }

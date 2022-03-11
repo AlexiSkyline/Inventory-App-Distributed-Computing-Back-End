@@ -186,4 +186,57 @@ public class AdminProduct {
 
         return results;
     }
+
+    public async Task<ProductResponse> DeleteProduct( Guid IdProduct ) {
+        ProductResponse results       = new ProductResponse();
+        ProductRequest ProductRequest = new ProductRequest();
+        ProductRequest.Id             = IdProduct;
+
+        using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
+            connection.Open();
+
+            var commandStoredProcedure = new SqlCommand {
+                Connection  = connection,
+                CommandText = "[dbo].[AdministracionArticulos]",
+                CommandType = CommandType.StoredProcedure
+            };
+
+            commandStoredProcedure.Parameters.AddWithValue( "@Id", ProductRequest.Id );
+            commandStoredProcedure.Parameters.AddWithValue( "@Opcion", "Eliminar" );
+
+            SqlParameter successStatus  = new SqlParameter();
+            successStatus.ParameterName = "@Exito";
+            successStatus.SqlDbType     = SqlDbType.Bit;
+            successStatus.Direction     = ParameterDirection.Output;
+
+            commandStoredProcedure.Parameters.Add( successStatus );
+
+            SqlParameter message  = new SqlParameter();
+            message.ParameterName = "@Mensaje";
+            message.SqlDbType     = SqlDbType.VarChar;
+            message.Direction     = ParameterDirection.Output;
+            message.Size          = 4000;
+
+            commandStoredProcedure.Parameters.Add( message );
+
+            var infoProduct = await commandStoredProcedure.ExecuteReaderAsync();
+
+            while( infoProduct.Read() ) {
+                results.Id             = infoProduct.GetGuid( "Id" );
+                results.Name           = infoProduct.GetString( "Nombre" );
+                results.Description    = infoProduct.GetString( "Descripcion" );
+                results.Price          = infoProduct.GetDecimal( "Precio" );
+                results.UnitMesurement = infoProduct.GetString( "UnidadMedida" );
+                results.Brand          = infoProduct.GetString( "Marca" );
+                results.Stock          = infoProduct.GetInt32( "Stock" );
+                results.Provider       = infoProduct.GetString( "Proveedor" );
+            }
+
+            connection.Close();
+            results.Status  = ( bool ) successStatus.Value;
+            results.Message = ( string ) message.Value; 
+        }
+
+        return results;
+    }
 }
