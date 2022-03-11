@@ -52,5 +52,11 @@ public class ProductController : ControllerBase {
 
             return Ok( request );
         }
+
+        [HttpGet( "{name}" )]
+        public async Task<IActionResult> FilterProducts( string name ) {
+            var request = await BLLProduct.FilterProducts( name );        
+            return Ok( request );
+        }
     #endregion
 }

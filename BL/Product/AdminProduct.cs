@@ -239,4 +239,67 @@ public class AdminProduct {
 
         return results;
     }
+
+     public async Task<Object> FilterProducts( string Name ) {
+        List<Object> results          = new List<Object>();
+        SingleResponse messageWarning = new SingleResponse();
+        ProductRequest ProductRequest = new ProductRequest();
+        ProductRequest.Name           = Name;
+        
+        using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
+            connection.Open();
+
+            var commandStoredProcedure = new SqlCommand {
+                Connection  = connection,
+                CommandText = "[dbo].[AdministracionArticulos]",
+                CommandType = CommandType.StoredProcedure
+            };
+            
+            commandStoredProcedure.Parameters.AddWithValue( "@Nombre", ProductRequest.Name );
+            commandStoredProcedure.Parameters.AddWithValue( "@Opcion", "ListaFiltrada" );
+
+            SqlParameter successStatus  = new SqlParameter();
+            successStatus.ParameterName = "@Exito";
+            successStatus.SqlDbType     = SqlDbType.Bit;
+            successStatus.Direction     = ParameterDirection.Output;
+
+            commandStoredProcedure.Parameters.Add( successStatus );
+
+            SqlParameter message  = new SqlParameter();
+            message.ParameterName = "@Mensaje";
+            message.SqlDbType     = SqlDbType.VarChar;
+            message.Direction     = ParameterDirection.Output;
+            message.Size          = 4000;
+
+            commandStoredProcedure.Parameters.Add( message );
+
+            var infoProduct = await commandStoredProcedure.ExecuteReaderAsync();
+
+            while( infoProduct.Read() ) {
+                var FormatResult = new { 
+                    Id             = infoProduct.GetGuid( "Id" ), 
+                    Name           = infoProduct.GetString( "Nombre" ),
+                    Description    = infoProduct.GetString( "Descripcion" ),
+                    Price          = infoProduct.GetDecimal( "Precio" ),
+                    UnitMesurement = infoProduct.GetString( "UnidadMedida" ),
+                    Brand          = infoProduct.GetString( "Marca" ),
+                    Stock          = infoProduct.GetInt32( "Stock" ),
+                    Provider       = infoProduct.GetString( "Proveedor" )
+                };
+
+                results.Add( FormatResult );
+            }
+
+            connection.Close();
+            messageWarning.Status  = ( bool ) successStatus.Value;
+            messageWarning.Message = ( string ) message.Value; 
+        }
+
+        FormatResponse formatResponse = new FormatResponse();
+        formatResponse.Results = results;
+        formatResponse.Message = messageWarning.Message;
+        formatResponse.Status  = messageWarning.Status;
+
+        return formatResponse;
+    }
 }
