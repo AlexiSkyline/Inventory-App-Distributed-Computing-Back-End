@@ -28,5 +28,17 @@ public class ProductController : ControllerBase {
             var request = await BLLProduct.GetProducts();
             return Ok( request );
         }
+
+        [HttpPut( "{id}" )]
+        public async Task<IActionResult> UpdateProduct( Guid id, ProductRequest ProductModel ) {
+            var request = await BLLProduct.UpdateProduct( id, ProductModel );
+
+            if( request.Status == false ) {
+                var message = new { request.Message, status = 401 };
+                return Unauthorized( message );
+            }
+
+            return Created( "", request );
+        }
     #endregion
 }
