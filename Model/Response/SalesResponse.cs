@@ -3,7 +3,7 @@ namespace Unach.Inventory.API.Model.Response;
 
 public class SalesResponse : SingleResponse {
     public Guid? Id { get; set; }
-    public string? Date { get; set; }
+    public DateTime? Date { get; set; }
     public string? Seller { get; set; }    
     public string? Client { get; set; }
     public int? Folio { get; set; }

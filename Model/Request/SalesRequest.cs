@@ -6,11 +6,8 @@ namespace Unach.Inventory.API.Model.Request;
 public class SalesRequest {
     public Guid? Id { get; set; }
 
-    [StringLength(15)]
     [Required( ErrorMessage = "The Date is required." )]     
-	[MinLength( 10, ErrorMessage = "The Date must have a Minimum of 10 Characters." )]
-	[MaxLength( 15, ErrorMessage = "The Date must have a Maximum of 15 Characters." )]
-    public string? Date { get; set; }
+    public DateTime? Date { get; set; }
     
     public Guid? IdSeller { get; set; }
     
