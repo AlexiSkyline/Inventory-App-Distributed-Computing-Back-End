@@ -67,4 +67,72 @@ public class AdminSales {
 
         return results;
     }
+
+    public async Task<Object> GetSales() {
+        List<Object> results          = new List<Object>();
+        SingleResponse messageWarning = new SingleResponse();
+
+        using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
+            connection.Open();
+
+            var commandStoredProcedure = new SqlCommand {
+                Connection  = connection,
+                CommandText = "[dbo].[AdministracionVentas]",
+                CommandType = CommandType.StoredProcedure
+            };
+
+            commandStoredProcedure.Parameters.AddWithValue( "@Opcion", "Listar" );
+
+            SqlParameter successStatus  = new SqlParameter();
+            successStatus.ParameterName = "@Exito";
+            successStatus.SqlDbType     = SqlDbType.Bit;
+            successStatus.Direction     = ParameterDirection.Output;
+
+            commandStoredProcedure.Parameters.Add( successStatus );
+
+            SqlParameter message  = new SqlParameter();
+            message.ParameterName = "@Mensaje";
+            message.SqlDbType     = SqlDbType.VarChar;
+            message.Direction     = ParameterDirection.Output;
+            message.Size          = 4000;
+
+            commandStoredProcedure.Parameters.Add( message );
+
+            var infoProduct = await commandStoredProcedure.ExecuteReaderAsync();
+
+            while( infoProduct.Read() ) {
+                var FormatResult = new { 
+                    Id           = infoProduct.GetGuid( "Id" ),
+                    Date         = infoProduct.GetDateTime( "Fecha" ),
+                    Seller       = infoProduct.GetString( "Vendedor" ),
+                    Client       = infoProduct.GetString( "Cliente" ),
+                    Folio        = infoProduct.GetInt32( "Folio" ),
+                    Business     = infoProduct.GetString( "Empresa" ),
+                    Total        = infoProduct.GetDecimal( "Total" ),
+                    IVA          = infoProduct.GetDecimal( "Iva" ),
+                    SubTotal     = infoProduct.GetDecimal( "SubTotal" ),
+                    PaymentType  = infoProduct.GetString( "PagoCon" ),
+                };
+
+                results.Add( FormatResult );
+            }
+
+            connection.Close();
+            messageWarning.Status  = ( bool ) successStatus.Value;
+            messageWarning.Message = ( string ) message.Value;
+        }
+
+        FormatResponse FormatResponse = new FormatResponse();
+        FormatResponse.Results = results;
+
+        if( results.Count == 0 ) {
+            FormatResponse.Message = "The table is empty";
+            FormatResponse.Status  = false;
+        } else {
+            FormatResponse.Message = messageWarning.Message;
+            FormatResponse.Status  = messageWarning.Status;
+        }
+
+        return FormatResponse;
+    }
 }

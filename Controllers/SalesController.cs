@@ -16,5 +16,11 @@ public class SalesController : ControllerBase {
             var request = await BLLSales.CreateSales( SalesRequest );
             return Created( "", request );
         }
+
+        [HttpGet( "" )]
+        public async Task<IActionResult> GetSales() {
+            var request = await BLLSales.GetSales();
+            return Ok( request );
+        }
     #endregion
 }
