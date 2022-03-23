@@ -198,4 +198,59 @@ public class AdminSales {
 
         return results;
     }
+
+    public async Task<SalesResponse> DeleteSales( Guid IdUnit ) {
+        SalesResponse results      = new SalesResponse();
+        SalesRequest SalesRequest = new SalesRequest();
+        SalesRequest.Id           = IdUnit;
+
+        using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
+            connection.Open();
+
+            var commandStoredProcedure = new SqlCommand {
+                Connection  = connection,
+                CommandText = "[dbo].[AdministracionVentas]",
+                CommandType = CommandType.StoredProcedure
+            };
+
+            commandStoredProcedure.Parameters.AddWithValue( "@Id", SalesRequest.Id );
+            commandStoredProcedure.Parameters.AddWithValue( "@Opcion", "Eliminar" );
+
+            SqlParameter successStatus  = new SqlParameter();
+            successStatus.ParameterName = "@Exito";
+            successStatus.SqlDbType     = SqlDbType.Bit;
+            successStatus.Direction     = ParameterDirection.Output;
+
+            commandStoredProcedure.Parameters.Add( successStatus );
+
+            SqlParameter message  = new SqlParameter();
+            message.ParameterName = "@Mensaje";
+            message.SqlDbType     = SqlDbType.VarChar;
+            message.Direction     = ParameterDirection.Output;
+            message.Size          = 4000;
+
+            commandStoredProcedure.Parameters.Add( message );
+
+            var infoProduct = await commandStoredProcedure.ExecuteReaderAsync();
+
+            while( infoProduct.Read() ) {
+                results.Id           = infoProduct.GetGuid( "Id" );
+                results.Date         = infoProduct.GetDateTime( "Fecha" );
+                results.Seller       = infoProduct.GetString( "Vendedor" );
+                results.Client       = infoProduct.GetString( "Cliente" );
+                results.Folio        = infoProduct.GetInt32( "Folio" );
+                results.Business     = infoProduct.GetString( "Empresa" );
+                results.Total        = infoProduct.GetDecimal( "Total" );
+                results.IVA          = infoProduct.GetDecimal( "Iva" );
+                results.SubTotal     = infoProduct.GetDecimal( "SubTotal" );
+                results.PaymentType  = infoProduct.GetString( "PagoCon" );
+            }
+
+            connection.Close();
+            results.Status  = ( bool ) successStatus.Value;
+            results.Message = ( string ) message.Value; 
+        }
+        
+        return results;
+    }
 }

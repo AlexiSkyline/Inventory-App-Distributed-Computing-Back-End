@@ -34,5 +34,17 @@ public class SalesController : ControllerBase {
 
             return Created( "", request );
         }
+
+        [HttpDelete( "{id}" )]
+        public async Task<ActionResult<SalesRequest>> DeleteSales( Guid id ) {
+            var request = await BLLSales.DeleteSales( id );
+
+            if( request.Status == false ) {
+                var message = new { request.Message, status = 401 };
+                return Unauthorized( message );
+            }
+
+            return Ok( request );
+        }
     #endregion
 }
