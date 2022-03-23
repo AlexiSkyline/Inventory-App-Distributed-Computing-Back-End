@@ -45,19 +45,19 @@ public class AdminSales {
 
             commandStoredProcedure.Parameters.Add( message );
 
-            var infoProduct = await commandStoredProcedure.ExecuteReaderAsync();
+            var infoSales = await commandStoredProcedure.ExecuteReaderAsync();
 
-            while( infoProduct.Read() ) {
-                results.Id       = infoProduct.GetGuid( "Id" );
-                results.Date     = infoProduct.GetDateTime( "Fecha" );
-                results.Seller   = infoProduct.GetString( "Vendedor" );
-                results.Client   = infoProduct.GetString( "Cliente" );
-                results.Folio    = infoProduct.GetInt32( "Folio" );
-                results.Business = infoProduct.GetString( "Empresa" );
-                results.Total    = infoProduct.GetDecimal( "Total" );
-                results.IVA      = infoProduct.GetDecimal( "Iva" );
-                results.SubTotal = infoProduct.GetDecimal( "SubTotal" );
-                results.PaymentType  = infoProduct.GetString( "PagoCon" );
+            while( infoSales.Read() ) {
+                results.Id       = infoSales.GetGuid( "Id" );
+                results.Date     = infoSales.GetDateTime( "Fecha" );
+                results.Seller   = infoSales.GetString( "Vendedor" );
+                results.Client   = infoSales.GetString( "Cliente" );
+                results.Folio    = infoSales.GetInt32( "Folio" );
+                results.Business = infoSales.GetString( "Empresa" );
+                results.Total    = infoSales.GetDecimal( "Total" );
+                results.IVA      = infoSales.GetDecimal( "Iva" );
+                results.SubTotal = infoSales.GetDecimal( "SubTotal" );
+                results.PaymentType  = infoSales.GetString( "PagoCon" );
             }
 
             connection.Close();
@@ -98,20 +98,20 @@ public class AdminSales {
 
             commandStoredProcedure.Parameters.Add( message );
 
-            var infoProduct = await commandStoredProcedure.ExecuteReaderAsync();
+            var infoSales = await commandStoredProcedure.ExecuteReaderAsync();
 
-            while( infoProduct.Read() ) {
+            while( infoSales.Read() ) {
                 var FormatResult = new { 
-                    Id           = infoProduct.GetGuid( "Id" ),
-                    Date         = infoProduct.GetDateTime( "Fecha" ),
-                    Seller       = infoProduct.GetString( "Vendedor" ),
-                    Client       = infoProduct.GetString( "Cliente" ),
-                    Folio        = infoProduct.GetInt32( "Folio" ),
-                    Business     = infoProduct.GetString( "Empresa" ),
-                    Total        = infoProduct.GetDecimal( "Total" ),
-                    IVA          = infoProduct.GetDecimal( "Iva" ),
-                    SubTotal     = infoProduct.GetDecimal( "SubTotal" ),
-                    PaymentType  = infoProduct.GetString( "PagoCon" ),
+                    Id           = infoSales.GetGuid( "Id" ),
+                    Date         = infoSales.GetDateTime( "Fecha" ),
+                    Seller       = infoSales.GetString( "Vendedor" ),
+                    Client       = infoSales.GetString( "Cliente" ),
+                    Folio        = infoSales.GetInt32( "Folio" ),
+                    Business     = infoSales.GetString( "Empresa" ),
+                    Total        = infoSales.GetDecimal( "Total" ),
+                    IVA          = infoSales.GetDecimal( "Iva" ),
+                    SubTotal     = infoSales.GetDecimal( "SubTotal" ),
+                    PaymentType  = infoSales.GetString( "PagoCon" ),
                 };
 
                 results.Add( FormatResult );
@@ -176,19 +176,19 @@ public class AdminSales {
 
             commandStoredProcedure.Parameters.Add( message );
 
-            var infoProduct = await commandStoredProcedure.ExecuteReaderAsync();
+            var infoSales = await commandStoredProcedure.ExecuteReaderAsync();
 
-            while( infoProduct.Read() ) {
-                results.Id           = infoProduct.GetGuid( "Id" );
-                results.Date         = infoProduct.GetDateTime( "Fecha" );
-                results.Seller       = infoProduct.GetString( "Vendedor" );
-                results.Client       = infoProduct.GetString( "Cliente" );
-                results.Folio        = infoProduct.GetInt32( "Folio" );
-                results.Business     = infoProduct.GetString( "Empresa" );
-                results.Total        = infoProduct.GetDecimal( "Total" );
-                results.IVA          = infoProduct.GetDecimal( "Iva" );
-                results.SubTotal     = infoProduct.GetDecimal( "SubTotal" );
-                results.PaymentType  = infoProduct.GetString( "PagoCon" );
+            while( infoSales.Read() ) {
+                results.Id           = infoSales.GetGuid( "Id" );
+                results.Date         = infoSales.GetDateTime( "Fecha" );
+                results.Seller       = infoSales.GetString( "Vendedor" );
+                results.Client       = infoSales.GetString( "Cliente" );
+                results.Folio        = infoSales.GetInt32( "Folio" );
+                results.Business     = infoSales.GetString( "Empresa" );
+                results.Total        = infoSales.GetDecimal( "Total" );
+                results.IVA          = infoSales.GetDecimal( "Iva" );
+                results.SubTotal     = infoSales.GetDecimal( "SubTotal" );
+                results.PaymentType  = infoSales.GetString( "PagoCon" );
             }
 
             connection.Close();
@@ -231,19 +231,19 @@ public class AdminSales {
 
             commandStoredProcedure.Parameters.Add( message );
 
-            var infoProduct = await commandStoredProcedure.ExecuteReaderAsync();
+            var infoSales = await commandStoredProcedure.ExecuteReaderAsync();
 
-            while( infoProduct.Read() ) {
-                results.Id           = infoProduct.GetGuid( "Id" );
-                results.Date         = infoProduct.GetDateTime( "Fecha" );
-                results.Seller       = infoProduct.GetString( "Vendedor" );
-                results.Client       = infoProduct.GetString( "Cliente" );
-                results.Folio        = infoProduct.GetInt32( "Folio" );
-                results.Business     = infoProduct.GetString( "Empresa" );
-                results.Total        = infoProduct.GetDecimal( "Total" );
-                results.IVA          = infoProduct.GetDecimal( "Iva" );
-                results.SubTotal     = infoProduct.GetDecimal( "SubTotal" );
-                results.PaymentType  = infoProduct.GetString( "PagoCon" );
+            while( infoSales.Read() ) {
+                results.Id           = infoSales.GetGuid( "Id" );
+                results.Date         = infoSales.GetDateTime( "Fecha" );
+                results.Seller       = infoSales.GetString( "Vendedor" );
+                results.Client       = infoSales.GetString( "Cliente" );
+                results.Folio        = infoSales.GetInt32( "Folio" );
+                results.Business     = infoSales.GetString( "Empresa" );
+                results.Total        = infoSales.GetDecimal( "Total" );
+                results.IVA          = infoSales.GetDecimal( "Iva" );
+                results.SubTotal     = infoSales.GetDecimal( "SubTotal" );
+                results.PaymentType  = infoSales.GetString( "PagoCon" );
             }
 
             connection.Close();
@@ -285,20 +285,20 @@ public class AdminSales {
 
             commandStoredProcedure.Parameters.Add( message );
 
-            var infoProduct = await commandStoredProcedure.ExecuteReaderAsync();
+            var infoSales = await commandStoredProcedure.ExecuteReaderAsync();
 
-            while( infoProduct.Read() ) {
+            while( infoSales.Read() ) {
                 var FormatResult = new { 
-                    Id           = infoProduct.GetGuid( "Id" ),
-                    Date         = infoProduct.GetDateTime( "Fecha" ),
-                    Seller       = infoProduct.GetString( "Vendedor" ),
-                    Client       = infoProduct.GetString( "Cliente" ),
-                    Folio        = infoProduct.GetInt32( "Folio" ),
-                    Business     = infoProduct.GetString( "Empresa" ),
-                    Total        = infoProduct.GetDecimal( "Total" ),
-                    IVA          = infoProduct.GetDecimal( "Iva" ),
-                    SubTotal     = infoProduct.GetDecimal( "SubTotal" ),
-                    PaymentType  = infoProduct.GetString( "PagoCon" ),
+                    Id           = infoSales.GetGuid( "Id" ),
+                    Date         = infoSales.GetDateTime( "Fecha" ),
+                    Seller       = infoSales.GetString( "Vendedor" ),
+                    Client       = infoSales.GetString( "Cliente" ),
+                    Folio        = infoSales.GetInt32( "Folio" ),
+                    Business     = infoSales.GetString( "Empresa" ),
+                    Total        = infoSales.GetDecimal( "Total" ),
+                    IVA          = infoSales.GetDecimal( "Iva" ),
+                    SubTotal     = infoSales.GetDecimal( "SubTotal" ),
+                    PaymentType  = infoSales.GetString( "PagoCon" ),
                 };
 
                 results.Add( FormatResult );
