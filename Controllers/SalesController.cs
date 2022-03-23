@@ -22,5 +22,17 @@ public class SalesController : ControllerBase {
             var request = await BLLSales.GetSales();
             return Ok( request );
         }
+
+        [HttpPut( "{id}" )]
+        public async Task<IActionResult> UpdateSeles( Guid id, SalesRequest salesRequest ) {
+            var request = await BLLSales.UpdateSeles( id, salesRequest );
+
+            if( request.Status == false ) {
+                var message = new { request.Message, status = 401 };
+                return Unauthorized( message );
+            }
+
+            return Created( "", request );
+        }
     #endregion
 }
