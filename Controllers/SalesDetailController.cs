@@ -16,5 +16,11 @@ public class SalesDetailController : ControllerBase {
             var request = await BLLSalesDetail.CreateSalesDetail( SalesDetailRequest );
             return Created( "", request );
         }
+
+        [HttpGet( "" )]
+        public async Task<IActionResult> GetSalesDatail() {
+            var request = await BLLSalesDetail.GetSalesDatail();
+            return Ok( request );
+        }
     #endregion
 }
