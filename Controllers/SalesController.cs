@@ -24,8 +24,8 @@ public class SalesController : ControllerBase {
         }
 
         [HttpPut( "{id}" )]
-        public async Task<IActionResult> UpdateSeles( Guid id, SalesRequest salesRequest ) {
-            var request = await BLLSales.UpdateSeles( id, salesRequest );
+        public async Task<IActionResult> UpdateSales( Guid id, SalesRequest salesRequest ) {
+            var request = await BLLSales.UpdateSales( id, salesRequest );
 
             if( request.Status == false ) {
                 var message = new { request.Message, status = 401 };

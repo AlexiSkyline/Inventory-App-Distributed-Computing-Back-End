@@ -25,7 +25,7 @@ public class SalesDetailController : ControllerBase {
 
         [HttpPut( "{id}" )]
         public async Task<IActionResult> UpdateSalesDetail( Guid id, SalesDetailRequest salesDetailRequest ) {
-            var request = await BLLSalesDetail.UpdateSelesDetail( id, salesDetailRequest );
+            var request = await BLLSalesDetail.UpdateSalesDetail( id, salesDetailRequest );
 
             if( request.Status == false ) {
                 var message = new { request.Message, status = 401 };
@@ -33,6 +33,18 @@ public class SalesDetailController : ControllerBase {
             }
 
             return Created( "", request );
+        }
+
+        [HttpDelete( "{id}" )]
+        public async Task<ActionResult<SalesDetailRequest>> DeleteSalesDetail( Guid id ) {
+            var request = await BLLSalesDetail.DeleteSalesDetail( id );
+
+            if( request.Status == false ) {
+                var message = new { request.Message, status = 401 };
+                return Unauthorized( message );
+            }
+
+            return Ok( request );
         }
     #endregion
 }

@@ -136,7 +136,7 @@ public class AdminSales {
         return FormatResponse;
     }
 
-    public async Task<SalesResponse> UpdateSeles( Guid id, SalesRequest salesRequest ) {
+    public async Task<SalesResponse> UpdateSales( Guid id, SalesRequest salesRequest ) {
         SalesResponse results = new SalesResponse();
         salesRequest.Id       = id;
 

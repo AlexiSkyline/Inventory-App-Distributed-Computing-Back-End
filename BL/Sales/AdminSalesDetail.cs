@@ -128,7 +128,7 @@ public class AdminSalesDetail {
         return FormatResponse;
     }
 
-    public async Task<SalesDetailResponse> UpdateSelesDetail( Guid id, SalesDetailRequest salesDetailRequest ) {
+    public async Task<SalesDetailResponse> UpdateSalesDetail( Guid id, SalesDetailRequest salesDetailRequest ) {
         SalesDetailResponse results = new SalesDetailResponse();
         salesDetailRequest.Id = id;
 
@@ -181,6 +181,58 @@ public class AdminSalesDetail {
             results.Message = ( string ) message.Value; 
         }
 
+        return results;
+    }
+
+    public async Task<SalesDetailResponse> DeleteSalesDetail( Guid IdUnit ) {
+        SalesDetailResponse results           = new SalesDetailResponse();
+        SalesDetailRequest SalesDetailRequest = new SalesDetailRequest();
+        SalesDetailRequest.Id                 = IdUnit;
+
+        using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
+            connection.Open();
+
+            var commandStoredProcedure = new SqlCommand {
+                Connection  = connection,
+                CommandText = "[dbo].[AdministracionDetalleVenta]",
+                CommandType = CommandType.StoredProcedure
+            };
+
+            commandStoredProcedure.Parameters.AddWithValue( "@Id", SalesDetailRequest.Id );
+            commandStoredProcedure.Parameters.AddWithValue( "@Opcion", "Eliminar" );
+
+            SqlParameter successStatus  = new SqlParameter();
+            successStatus.ParameterName = "@Exito";
+            successStatus.SqlDbType     = SqlDbType.Bit;
+            successStatus.Direction     = ParameterDirection.Output;
+
+            commandStoredProcedure.Parameters.Add( successStatus );
+
+            SqlParameter message  = new SqlParameter();
+            message.ParameterName = "@Mensaje";
+            message.SqlDbType     = SqlDbType.VarChar;
+            message.Direction     = ParameterDirection.Output;
+            message.Size          = 4000;
+
+            commandStoredProcedure.Parameters.Add( message );
+
+            var infoSalesDetail = await commandStoredProcedure.ExecuteReaderAsync();
+
+            while( infoSalesDetail.Read() ) {
+                results.Id            = infoSalesDetail.GetGuid( "Id" );
+                results.Folio         = infoSalesDetail.GetInt32( "Folio" );
+                results.Product       = infoSalesDetail.GetString( "Articulo" );
+                results.AmountProduct = infoSalesDetail.GetInt32( "Cantidad" );
+                results.PurchasePrice = infoSalesDetail.GetDecimal( "PrecioCompra" );
+                results.Amount        = infoSalesDetail.GetDecimal( "Importe" );
+                results.Date          = infoSalesDetail.GetDateTime( "Fecha" );
+            }
+
+            connection.Close();
+            results.Status  = ( bool ) successStatus.Value;
+            results.Message = ( string ) message.Value; 
+        }
+        
         return results;
     }
 }
