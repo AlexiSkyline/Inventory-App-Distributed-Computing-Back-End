@@ -18,9 +18,21 @@ public class SalesDetailController : ControllerBase {
         }
 
         [HttpGet( "" )]
-        public async Task<IActionResult> GetSalesDatail() {
+        public async Task<IActionResult> GetSalesDetail() {
             var request = await BLLSalesDetail.GetSalesDatail();
             return Ok( request );
+        }
+
+        [HttpPut( "{id}" )]
+        public async Task<IActionResult> UpdateSalesDetail( Guid id, SalesDetailRequest salesDetailRequest ) {
+            var request = await BLLSalesDetail.UpdateSelesDetail( id, salesDetailRequest );
+
+            if( request.Status == false ) {
+                var message = new { request.Message, status = 401 };
+                return Unauthorized( message );
+            }
+
+            return Created( "", request );
         }
     #endregion
 }

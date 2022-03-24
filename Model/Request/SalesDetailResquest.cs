@@ -23,6 +23,5 @@ public class SalesDetailRequest {
     [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = true)]
     public Nullable<double> Amount { get; set; }
 
-    [Required( ErrorMessage = "The Date is required." )]
     public DateTime? Date { get; set; }
 }
