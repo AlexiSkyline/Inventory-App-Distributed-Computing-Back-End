@@ -5,8 +5,7 @@ namespace Unach.Inventory.API.Model.Request;
 
 public class SalesRequest {
     public Guid? Id { get; set; }
-
-    [Required( ErrorMessage = "The Date is required." )]     
+    
     public DateTime? Date { get; set; }
     
     public Guid? IdSeller { get; set; }

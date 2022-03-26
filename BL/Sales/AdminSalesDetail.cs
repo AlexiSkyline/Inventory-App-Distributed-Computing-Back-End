@@ -235,4 +235,64 @@ public class AdminSalesDetail {
         
         return results;
     }
+
+    public async Task<Object> FilterSalesDetail( string Date ) {
+        List<Object> results          = new List<Object>();
+        SingleResponse messageWarning = new SingleResponse();
+        
+        using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
+            connection.Open();
+
+            var commandStoredProcedure = new SqlCommand {
+                Connection  = connection,
+                CommandText = "[dbo].[AdministracionDetalleVenta]",
+                CommandType = CommandType.StoredProcedure
+            };
+            
+            commandStoredProcedure.Parameters.AddWithValue( "@Fecha", Date );
+            commandStoredProcedure.Parameters.AddWithValue( "@Opcion", "ListaFiltrada" );
+
+            SqlParameter successStatus  = new SqlParameter();
+            successStatus.ParameterName = "@Exito";
+            successStatus.SqlDbType     = SqlDbType.Bit;
+            successStatus.Direction     = ParameterDirection.Output;
+
+            commandStoredProcedure.Parameters.Add( successStatus );
+
+            SqlParameter message  = new SqlParameter();
+            message.ParameterName = "@Mensaje";
+            message.SqlDbType     = SqlDbType.VarChar;
+            message.Direction     = ParameterDirection.Output;
+            message.Size          = 4000;
+
+            commandStoredProcedure.Parameters.Add( message );
+
+            var infoSalesDetail = await commandStoredProcedure.ExecuteReaderAsync();
+
+            while( infoSalesDetail.Read() ) {
+                var FormatResult = new { 
+                    Id            = infoSalesDetail.GetGuid( "Id" ),
+                    Folio         = infoSalesDetail.GetInt32( "Folio" ),
+                    Product       = infoSalesDetail.GetString( "Articulo" ),
+                    AmountProduct = infoSalesDetail.GetInt32( "Cantidad" ),
+                    PurchasePrice = infoSalesDetail.GetDecimal( "PrecioCompra" ),
+                    Amount        = infoSalesDetail.GetDecimal( "Importe" ),
+                    Date          = infoSalesDetail.GetDateTime( "Fecha" )
+                };
+
+                results.Add( FormatResult );
+            }
+
+            connection.Close();
+            messageWarning.Status  = ( bool ) successStatus.Value;
+            messageWarning.Message = ( string ) message.Value; 
+        }
+
+        FormatResponse formatResponse = new FormatResponse();
+        formatResponse.Results = results;
+        formatResponse.Message = messageWarning.Message;
+        formatResponse.Status  = messageWarning.Status;
+
+        return formatResponse;
+    }
 }

@@ -46,5 +46,11 @@ public class SalesDetailController : ControllerBase {
 
             return Ok( request );
         }
+
+        [HttpGet( "{date}" )]
+        public async Task<IActionResult> FilterSalesDetail( string date ) {
+            var request = await BLLSalesDetail.FilterSalesDetail( date );        
+            return Ok( request );
+        }
     #endregion
 }
