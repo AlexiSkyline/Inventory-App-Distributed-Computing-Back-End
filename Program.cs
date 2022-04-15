@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Unach.Inventory.API.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 // * Assign the database connection string
 ContextDB.ConnectionString = builder.Configuration.GetConnectionString( "DBConexion" );
@@ -14,6 +15,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors( options => {
+    options.AddPolicy( name: MyAllowSpecificOrigins, policy => {
+        policy.WithOrigins( "http://localhost:3000" ).AllowAnyHeader().AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -24,6 +31,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors( MyAllowSpecificOrigins );
 
 app.UseAuthorization();
 
