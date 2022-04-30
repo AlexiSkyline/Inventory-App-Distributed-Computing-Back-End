@@ -46,14 +46,17 @@ public class AdminProduct {
             var infoProduct = await commandStoredProcedure.ExecuteReaderAsync();
 
             while( infoProduct.Read() ) {
-                results.Id             = infoProduct.GetGuid( "Id" );
-                results.Name           = infoProduct.GetString( "Nombre" );
-                results.Description    = infoProduct.GetString( "Descripcion" );
-                results.Price          = infoProduct.GetDecimal( "Precio" );
-                results.UnitMesurement = infoProduct.GetString( "UnidadMedida" );
-                results.Brand          = infoProduct.GetString( "Marca" );
-                results.Stock          = infoProduct.GetInt32( "Stock" );
-                results.Provider       = infoProduct.GetString( "Proveedor" );
+                results.Id               = infoProduct.GetGuid( "Id" );
+                results.Name             = infoProduct.GetString( "Nombre" );
+                results.Description      = infoProduct.GetString( "Descripcion" );
+                results.Price            = infoProduct.GetDecimal( "Precio" );
+                results.IdUnitMesurement = infoProduct.GetGuid( "IdUnidadMedida" );
+                results.UnitMesurement   = infoProduct.GetString( "UnidadMedida" );
+                results.IdBrand          = infoProduct.GetGuid( "IdMarca" );
+                results.Brand            = infoProduct.GetString( "Marca" );
+                results.Stock            = infoProduct.GetInt32( "Stock" );
+                results.IdProvider         = infoProduct.GetGuid( "IdProveedor" );
+                results.Provider         = infoProduct.GetString( "Proveedor" );
             }
 
             connection.Close();
@@ -98,14 +101,17 @@ public class AdminProduct {
 
             while( infoProduct.Read() ) {
                 var FormatResult = new { 
-                    Id             = infoProduct.GetGuid( "Id" ), 
-                    Name           = infoProduct.GetString( "Nombre" ),
-                    Description    = infoProduct.GetString( "Descripcion" ),
-                    Price          = infoProduct.GetDecimal( "Precio" ),
-                    UnitMesurement = infoProduct.GetString( "UnidadMedida" ),
-                    Brand          = infoProduct.GetString( "Marca" ),
-                    Stock          = infoProduct.GetInt32( "Stock" ),
-                    Provider       = infoProduct.GetString( "Proveedor" )
+                    Id               = infoProduct.GetGuid( "Id" ), 
+                    Name             = infoProduct.GetString( "Nombre" ),
+                    Description      = infoProduct.GetString( "Descripcion" ),
+                    Price            = infoProduct.GetDecimal( "Precio" ),
+                    IdUnitMesurement = infoProduct.GetGuid( "IdUnidadMedida" ),
+                    UnitMesurement   = infoProduct.GetString( "UnidadMedida" ),
+                    IdBrand          = infoProduct.GetGuid( "IdMarca" ),
+                    Brand            = infoProduct.GetString( "Marca" ),
+                    Stock            = infoProduct.GetInt32( "Stock" ),
+                    IdProvider       = infoProduct.GetGuid( "IdProveedor" ),
+                    Provider         = infoProduct.GetString( "Proveedor" )
                 };
 
                 results.Add( FormatResult );
@@ -169,14 +175,17 @@ public class AdminProduct {
             var infoProduct = await commandStoredProcedure.ExecuteReaderAsync();
 
             while( infoProduct.Read() ) {
-                results.Id             = infoProduct.GetGuid( "Id" );
-                results.Name           = infoProduct.GetString( "Nombre" );
-                results.Description    = infoProduct.GetString( "Descripcion" );
-                results.Price          = infoProduct.GetDecimal( "Precio" );
-                results.UnitMesurement = infoProduct.GetString( "UnidadMedida" );
-                results.Brand          = infoProduct.GetString( "Marca" );
-                results.Stock          = infoProduct.GetInt32( "Stock" );
-                results.Provider       = infoProduct.GetString( "Proveedor" );
+                results.Id               = infoProduct.GetGuid( "Id" );
+                results.Name             = infoProduct.GetString( "Nombre" );
+                results.Description      = infoProduct.GetString( "Descripcion" );
+                results.Price            = infoProduct.GetDecimal( "Precio" );
+                results.IdUnitMesurement = infoProduct.GetGuid( "IdUnidadMedida" );
+                results.UnitMesurement   = infoProduct.GetString( "UnidadMedida" );
+                results.IdBrand          = infoProduct.GetGuid( "IdMarca" );
+                results.Brand            = infoProduct.GetString( "Marca" );
+                results.Stock            = infoProduct.GetInt32( "Stock" );
+                results.IdProvider         = infoProduct.GetGuid( "IdProveedor" );
+                results.Provider         = infoProduct.GetString( "Proveedor" );
             }
 
             connection.Close();
@@ -222,14 +231,17 @@ public class AdminProduct {
             var infoProduct = await commandStoredProcedure.ExecuteReaderAsync();
 
             while( infoProduct.Read() ) {
-                results.Id             = infoProduct.GetGuid( "Id" );
-                results.Name           = infoProduct.GetString( "Nombre" );
-                results.Description    = infoProduct.GetString( "Descripcion" );
-                results.Price          = infoProduct.GetDecimal( "Precio" );
-                results.UnitMesurement = infoProduct.GetString( "UnidadMedida" );
-                results.Brand          = infoProduct.GetString( "Marca" );
-                results.Stock          = infoProduct.GetInt32( "Stock" );
-                results.Provider       = infoProduct.GetString( "Proveedor" );
+                results.Id               = infoProduct.GetGuid( "Id" );
+                results.Name             = infoProduct.GetString( "Nombre" );
+                results.Description      = infoProduct.GetString( "Descripcion" );
+                results.Price            = infoProduct.GetDecimal( "Precio" );
+                results.IdUnitMesurement = infoProduct.GetGuid( "IdUnidadMedida" );
+                results.UnitMesurement   = infoProduct.GetString( "UnidadMedida" );
+                results.IdBrand          = infoProduct.GetGuid( "IdMarca" );
+                results.Brand            = infoProduct.GetString( "Marca" );
+                results.Stock            = infoProduct.GetInt32( "Stock" );
+                results.IdProvider       = infoProduct.GetGuid( "IdProveedor" );
+                results.Provider         = infoProduct.GetString( "Proveedor" );
             }
 
             connection.Close();
@@ -277,14 +289,17 @@ public class AdminProduct {
 
             while( infoProduct.Read() ) {
                 var FormatResult = new { 
-                    Id             = infoProduct.GetGuid( "Id" ), 
-                    Name           = infoProduct.GetString( "Nombre" ),
-                    Description    = infoProduct.GetString( "Descripcion" ),
-                    Price          = infoProduct.GetDecimal( "Precio" ),
-                    UnitMesurement = infoProduct.GetString( "UnidadMedida" ),
-                    Brand          = infoProduct.GetString( "Marca" ),
-                    Stock          = infoProduct.GetInt32( "Stock" ),
-                    Provider       = infoProduct.GetString( "Proveedor" )
+                    Id               = infoProduct.GetGuid( "Id" ), 
+                    Name             = infoProduct.GetString( "Nombre" ),
+                    Description      = infoProduct.GetString( "Descripcion" ),
+                    Price            = infoProduct.GetDecimal( "Precio" ),
+                    IdUnitMesurement = infoProduct.GetGuid( "IdUnidadMedida" ),
+                    UnitMesurement   = infoProduct.GetString( "UnidadMedida" ),
+                    IdBrand          = infoProduct.GetGuid( "IdMarca" ),
+                    Brand            = infoProduct.GetString( "Marca" ),
+                    Stock            = infoProduct.GetInt32( "Stock" ),
+                    IdProvider       = infoProduct.GetGuid( "IdProveedor" ),
+                    Provider         = infoProduct.GetString( "Proveedor" )
                 };
 
                 results.Add( FormatResult );
