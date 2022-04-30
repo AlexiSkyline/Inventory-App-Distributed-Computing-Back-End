@@ -47,7 +47,9 @@ public class AdminSalesDetail {
 
             while( infoSalesDetail.Read() ) {
                 results.Id            = infoSalesDetail.GetGuid( "Id" );
+                results.IdSale        = infoSalesDetail.GetGuid( "IdVentas" );
                 results.Folio         = infoSalesDetail.GetInt32( "Folio" );
+                results.IdProduct     = infoSalesDetail.GetGuid( "IdArticulo" );
                 results.Product       = infoSalesDetail.GetString( "Articulo" );
                 results.AmountProduct = infoSalesDetail.GetInt32( "Cantidad" );
                 results.PurchasePrice = infoSalesDetail.GetDecimal( "PrecioCompra" );
@@ -98,7 +100,9 @@ public class AdminSalesDetail {
             while( infoSalesDetail.Read() ) {
                 var FormatResult = new { 
                     Id            = infoSalesDetail.GetGuid( "Id" ),
+                    IdSales       = infoSalesDetail.GetGuid( "IdVentas" ),
                     Folio         = infoSalesDetail.GetInt32( "Folio" ),
+                    IdProduct     = infoSalesDetail.GetGuid( "IdArticulo" ),
                     Product       = infoSalesDetail.GetString( "Articulo" ),
                     AmountProduct = infoSalesDetail.GetInt32( "Cantidad" ),
                     PurchasePrice = infoSalesDetail.GetDecimal( "PrecioCompra" ),
@@ -168,7 +172,9 @@ public class AdminSalesDetail {
 
             while( infoSalesDetail.Read() ) {
                 results.Id            = infoSalesDetail.GetGuid( "Id" );
+                results.IdSale        = infoSalesDetail.GetGuid( "IdVentas" );
                 results.Folio         = infoSalesDetail.GetInt32( "Folio" );
+                results.IdProduct     = infoSalesDetail.GetGuid( "IdArticulo" );
                 results.Product       = infoSalesDetail.GetString( "Articulo" );
                 results.AmountProduct = infoSalesDetail.GetInt32( "Cantidad" );
                 results.PurchasePrice = infoSalesDetail.GetDecimal( "PrecioCompra" );
@@ -220,7 +226,9 @@ public class AdminSalesDetail {
 
             while( infoSalesDetail.Read() ) {
                 results.Id            = infoSalesDetail.GetGuid( "Id" );
+                results.IdSale        = infoSalesDetail.GetGuid( "IdVentas" );
                 results.Folio         = infoSalesDetail.GetInt32( "Folio" );
+                results.IdProduct     = infoSalesDetail.GetGuid( "IdArticulo" );
                 results.Product       = infoSalesDetail.GetString( "Articulo" );
                 results.AmountProduct = infoSalesDetail.GetInt32( "Cantidad" );
                 results.PurchasePrice = infoSalesDetail.GetDecimal( "PrecioCompra" );
@@ -272,7 +280,9 @@ public class AdminSalesDetail {
             while( infoSalesDetail.Read() ) {
                 var FormatResult = new { 
                     Id            = infoSalesDetail.GetGuid( "Id" ),
+                    IdSales       = infoSalesDetail.GetGuid( "IdVentas" ),
                     Folio         = infoSalesDetail.GetInt32( "Folio" ),
+                    IdProduct     = infoSalesDetail.GetGuid( "IdArticulo" ),
                     Product       = infoSalesDetail.GetString( "Articulo" ),
                     AmountProduct = infoSalesDetail.GetInt32( "Cantidad" ),
                     PurchasePrice = infoSalesDetail.GetDecimal( "PrecioCompra" ),
