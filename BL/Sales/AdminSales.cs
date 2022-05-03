@@ -48,15 +48,18 @@ public class AdminSales {
             var infoSales = await commandStoredProcedure.ExecuteReaderAsync();
 
             while( infoSales.Read() ) {
-                results.Id       = infoSales.GetGuid( "Id" );
-                results.Date     = infoSales.GetDateTime( "Fecha" );
-                results.Seller   = infoSales.GetString( "Vendedor" );
-                results.Client   = infoSales.GetString( "Cliente" );
-                results.Folio    = infoSales.GetInt32( "Folio" );
-                results.Business = infoSales.GetString( "Empresa" );
-                results.Total    = infoSales.GetDecimal( "Total" );
-                results.IVA      = infoSales.GetDecimal( "Iva" );
-                results.SubTotal = infoSales.GetDecimal( "SubTotal" );
+                results.Id           = infoSales.GetGuid( "Id" );
+                results.Date         = infoSales.GetDateTime( "Fecha" );
+                results.IdSeller     = infoSales.GetGuid( "IdVendedor" );
+                results.Seller       = infoSales.GetString( "Vendedor" );
+                results.IdClient     = infoSales.GetGuid( "IdCliente" );
+                results.Client       = infoSales.GetString( "Cliente" );
+                results.Folio        = infoSales.GetInt32( "Folio" );
+                results.IdBusiness   = infoSales.GetGuid( "IdEmpresa" );
+                results.Business     = infoSales.GetString( "Empresa" );
+                results.Total        = infoSales.GetDecimal( "Total" );
+                results.IVA          = infoSales.GetDecimal( "Iva" );
+                results.SubTotal     = infoSales.GetDecimal( "SubTotal" );
                 results.PaymentType  = infoSales.GetString( "PagoCon" );
             }
 
@@ -104,14 +107,17 @@ public class AdminSales {
                 var FormatResult = new { 
                     Id           = infoSales.GetGuid( "Id" ),
                     Date         = infoSales.GetDateTime( "Fecha" ),
+                    IdSeller     = infoSales.GetGuid( "IdVendedor" ),
                     Seller       = infoSales.GetString( "Vendedor" ),
+                    IdClient     = infoSales.GetGuid( "IdCliente" ),
                     Client       = infoSales.GetString( "Cliente" ),
                     Folio        = infoSales.GetInt32( "Folio" ),
+                    IdBusines    = infoSales.GetGuid( "IdEmpresa" ),
                     Business     = infoSales.GetString( "Empresa" ),
                     Total        = infoSales.GetDecimal( "Total" ),
                     IVA          = infoSales.GetDecimal( "Iva" ),
                     SubTotal     = infoSales.GetDecimal( "SubTotal" ),
-                    PaymentType  = infoSales.GetString( "PagoCon" ),
+                    PaymentType  = infoSales.GetString( "PagoCon" )
                 };
 
                 results.Add( FormatResult );
@@ -181,9 +187,12 @@ public class AdminSales {
             while( infoSales.Read() ) {
                 results.Id           = infoSales.GetGuid( "Id" );
                 results.Date         = infoSales.GetDateTime( "Fecha" );
+                results.IdSeller     = infoSales.GetGuid( "IdVendedor" );
                 results.Seller       = infoSales.GetString( "Vendedor" );
+                results.IdClient     = infoSales.GetGuid( "IdCliente" );
                 results.Client       = infoSales.GetString( "Cliente" );
                 results.Folio        = infoSales.GetInt32( "Folio" );
+                results.IdBusiness   = infoSales.GetGuid( "IdEmpresa" );
                 results.Business     = infoSales.GetString( "Empresa" );
                 results.Total        = infoSales.GetDecimal( "Total" );
                 results.IVA          = infoSales.GetDecimal( "Iva" );
@@ -236,9 +245,12 @@ public class AdminSales {
             while( infoSales.Read() ) {
                 results.Id           = infoSales.GetGuid( "Id" );
                 results.Date         = infoSales.GetDateTime( "Fecha" );
+                results.IdSeller     = infoSales.GetGuid( "IdVendedor" );
                 results.Seller       = infoSales.GetString( "Vendedor" );
+                results.IdClient     = infoSales.GetGuid( "IdCliente" );
                 results.Client       = infoSales.GetString( "Cliente" );
                 results.Folio        = infoSales.GetInt32( "Folio" );
+                results.IdBusiness   = infoSales.GetGuid( "IdEmpresa" );
                 results.Business     = infoSales.GetString( "Empresa" );
                 results.Total        = infoSales.GetDecimal( "Total" );
                 results.IVA          = infoSales.GetDecimal( "Iva" );
@@ -291,14 +303,17 @@ public class AdminSales {
                 var FormatResult = new { 
                     Id           = infoSales.GetGuid( "Id" ),
                     Date         = infoSales.GetDateTime( "Fecha" ),
+                    IdSeller     = infoSales.GetGuid( "IdVendedor" ),
                     Seller       = infoSales.GetString( "Vendedor" ),
+                    IdClient     = infoSales.GetGuid( "IdCliente" ),
                     Client       = infoSales.GetString( "Cliente" ),
                     Folio        = infoSales.GetInt32( "Folio" ),
+                    IdBusines    = infoSales.GetGuid( "IdEmpresa" ),
                     Business     = infoSales.GetString( "Empresa" ),
                     Total        = infoSales.GetDecimal( "Total" ),
                     IVA          = infoSales.GetDecimal( "Iva" ),
                     SubTotal     = infoSales.GetDecimal( "SubTotal" ),
-                    PaymentType  = infoSales.GetString( "PagoCon" ),
+                    PaymentType  = infoSales.GetString( "PagoCon" )
                 };
 
                 results.Add( FormatResult );
