@@ -331,4 +331,46 @@ public class AdminSales {
 
         return formatResponse;
     }
+
+    public async Task<FolioResponse> GetFolio() {
+        FolioResponse responseFolio = new FolioResponse();
+
+        using(var connection = new SqlConnection( ContextDB.ConnectionString )) {
+            connection.Open();
+
+            var commandStoredProcedure = new SqlCommand {
+                Connection  = connection,
+                CommandText = "[dbo].[AdministracionVentas]",
+                CommandType = CommandType.StoredProcedure
+            };
+
+            commandStoredProcedure.Parameters.AddWithValue( "@Opcion", "Folio" );
+
+            SqlParameter successStatus  = new SqlParameter();
+            successStatus.ParameterName = "@Exito";
+            successStatus.SqlDbType     = SqlDbType.Bit;
+            successStatus.Direction     = ParameterDirection.Output;
+
+            commandStoredProcedure.Parameters.Add( successStatus );
+
+            SqlParameter message  = new SqlParameter();
+            message.ParameterName = "@Mensaje";
+            message.SqlDbType     = SqlDbType.VarChar;
+            message.Direction     = ParameterDirection.Output;
+            message.Size          = 4000;
+
+            commandStoredProcedure.Parameters.Add( message );
+
+            var infoSales = await commandStoredProcedure.ExecuteReaderAsync();
+
+            while( infoSales.Read() ) {
+                responseFolio.Folio = infoSales.GetInt32( "Folio" );
+            }
+            connection.Close();
+            responseFolio.Message = ( string ) message.Value;
+            responseFolio.Status  = ( bool ) successStatus.Value;
+        }
+
+        return responseFolio;
+    }
 }

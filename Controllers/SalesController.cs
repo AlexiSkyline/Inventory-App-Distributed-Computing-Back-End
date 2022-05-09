@@ -52,5 +52,11 @@ public class SalesController : ControllerBase {
             var request = await BLLSales.FilterSales( date );        
             return Ok( request );
         }
+
+        [HttpGet( "Folio" )]
+        public async Task<IActionResult> GetFolio() {
+            var request = await BLLSales.GetFolio();
+            return Ok( request );
+        }        
     #endregion
 }
